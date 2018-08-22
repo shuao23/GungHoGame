@@ -5,7 +5,7 @@ Given the included robot model and animations, please create a game. The gamepla
 
 ### Requirements
 * Use all 4 animations included.
-* Use one shader written by you, which is basically a diffuse shader, but with an outline, and can take a color tint that can be set by the code. Please implement a * custom shader inspector, so that you can see the various components separately.
+* Use one shader written by you, which is basically a diffuse shader, but with an outline, and can take a color tint that can be set by the code. Please implement a custom shader inspector, so that you can see the various components separately.
 * Please include a full loop, starting with a title screen, the game, the end, and ability to restart the game.
 
 ### Duration
