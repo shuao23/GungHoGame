@@ -61,21 +61,4 @@ public class Follow : MonoBehaviour
 
         transform.position = newPosition;
     }
-
-
-    [Serializable]
-    private struct Bool3
-    {
-        public bool x;
-        public bool y;
-        public bool z;
-    }
-
-    private enum UpdateMode
-    {
-        None = 0,
-        Update = 1,
-        FixedUpdate = 2,
-        Both = 3
-    }
 }
