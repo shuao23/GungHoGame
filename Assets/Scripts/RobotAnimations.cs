@@ -6,8 +6,18 @@ public class RobotAnimations : MonoBehaviour
     private Animator animator;
     [SerializeField]
     private Rigidbody2D robotRigidbody;
+    [SerializeField]
+    private Transform meshTransform;
 
     private AnimationHash hash = new AnimationHash();
+
+
+    public Transform MeshTransform {
+        get {
+            return meshTransform == null ? transform : meshTransform;
+        }
+    }
+
 
     private void Awake()
     {
@@ -17,7 +27,7 @@ public class RobotAnimations : MonoBehaviour
             enabled = false;
         }
 
-        if(robotRigidbody == null)
+        if (robotRigidbody == null)
         {
             Debug.LogWarning("Rigidbody2D not assigned. Disabling");
             enabled = false;
@@ -37,7 +47,7 @@ public class RobotAnimations : MonoBehaviour
 
     private bool TryFindAnimator()
     {
-        if(animator == null)
+        if (animator == null)
         {
             animator = GetComponent<Animator>();
         }
@@ -52,7 +62,8 @@ public class RobotAnimations : MonoBehaviour
         public const string IS_PUNCHING = "isJump";
     }
 
-    private class AnimationHash {
+    private class AnimationHash
+    {
 
         public int WalkSpeed { get; private set; }
         public int IsJumping { get; private set; }
