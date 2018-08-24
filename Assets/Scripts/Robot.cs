@@ -1,29 +1,60 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class Robot : MonoBehaviour
 {
     [SerializeField]
-    private Rigidbody2D rigidBod;
+    private MoveStats groundStats = MoveStats.Default;
     [SerializeField]
-    private MoveStats stats = MoveStats.Default;
+    private MoveStats airStats = MoveStats.Default;
+    [SerializeField]
+    private JumpStats jumpingStats = JumpStats.Default;
+    [SerializeField]
+    private LayerMask groundCollision = ~0x0;
+    [SerializeField]
+    private Collider2D feetCollider;
 
     private float deltaXQueue = 0;
-    private bool jumpQueued = false;
+    private float jumpQueueTime = -1;
+    private int groundCount = 0;
 
 
-
-    public MoveStats Stats {
-        get { return stats; }
+    public MoveStats AirStats {
+        get { return airStats; }
     }
 
-    public Rigidbody2D Rigidbody {
-        get { return rigidBod; }
+    public MoveStats GroundStats {
+        get { return groundStats; }
     }
+
+    public bool IsGrounded {
+        get { return groundCount > 0; }
+    }
+
+    public JumpStats JumpingStats {
+        get { return jumpingStats; }
+    }
+
+    public bool JumpQueued {
+        get { return jumpQueueTime >= 0; }
+    }
+
+    public Rigidbody2D Rigidbody { get; private set; }
+
+
+    private bool ShouldJump {
+        get { return jumpQueueTime >= jumpingStats.JumpReadyTime; }
+    }
+
 
     public void Jump()
     {
-        jumpQueued = true;
+        if (!JumpQueued)
+        {
+            jumpQueueTime = 0;
+        }
     }
 
     /// <summary>
@@ -50,39 +81,71 @@ public class Robot : MonoBehaviour
     #region Unity Methods
     private void Awake()
     {
-        if (!TryFindRigidbody())
+        if(feetCollider == null)
         {
-            Debug.LogWarning("Rigidbody not assigned nor found. Disabling");
+            Debug.LogWarning("Feet collider not assinged. Disabling");
             enabled = false;
         }
+
+        Rigidbody = GetComponent<Rigidbody2D>();
     }
 
     private void FixedUpdate()
     {
-        if (jumpQueued)
+        if (JumpQueued)
         {
-            ApplyJump();
+            jumpQueueTime += Time.fixedDeltaTime;
         }
 
-        ApplyMove(Time.fixedDeltaTime);
+        if (IsGrounded)
+        {
+            if (ShouldJump)
+            {
+                ApplyJump();
+            }
+
+            ApplyMove(groundStats, Time.fixedDeltaTime);
+        }
+        else
+        {
+            if (ShouldJump)
+            {
+                ClearJumpQueue();
+            }
+
+            ApplyMove(airStats, Time.fixedDeltaTime);
+        }
     }
 
-    private void Reset()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        TryFindRigidbody();
+        if (IsGroundCollision(collision) && 
+            (ReferenceEquals(collision.collider, feetCollider) ||
+            ReferenceEquals(collision.otherCollider, feetCollider)))
+        {
+            groundCount++;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (IsGroundCollision(collision))
+        {
+            groundCount--;
+        }
     }
     #endregion
 
 
     private void ApplyJump()
     {
-        rigidBod.AddForce(Vector2.up * stats.JumpVelocity, ForceMode2D.Impulse);
-        jumpQueued = false;
+        Rigidbody.AddForce(Vector2.up * jumpingStats.JumpVelocity, ForceMode2D.Impulse);
+        ClearJumpQueue();
     }
 
-    private void ApplyMove(float deltaTime)
+    private void ApplyMove(MoveStats stats, float deltaTime)
     {
-        float currentXVelocity = rigidBod.velocity.x;
+        float currentXVelocity = Rigidbody.velocity.x;
         float targetXVelocity = deltaXQueue * stats.MaxVelocity;
         float newVelocity = currentXVelocity;
         if (currentXVelocity < targetXVelocity)
@@ -93,23 +156,19 @@ public class Robot : MonoBehaviour
         {
             newVelocity = Mathf.Max(currentXVelocity - stats.Acceleration * deltaTime, targetXVelocity);
         }
-        rigidBod.velocity = new Vector2(newVelocity, rigidBod.velocity.y);
+        Rigidbody.velocity = new Vector2(newVelocity, Rigidbody.velocity.y);
         deltaXQueue = 0;
     }
 
-    /// <summary>
-    /// Tries to find rigid body on same gameobject
-    /// </summary>
-    /// <returns>True if a rigidbody was found</returns>
-    private bool TryFindRigidbody()
+    private void ClearJumpQueue()
     {
-        if (rigidBod == null)
-        {
-            rigidBod = GetComponent<Rigidbody2D>(); 
-        }
-        return rigidBod != null;
+        jumpQueueTime = -1;
     }
 
+    private bool IsGroundCollision(Collision2D collision)
+    {
+        return (groundCollision.value & (1 << collision.gameObject.layer)) != 0;
+    }
 
     [Serializable]
     public struct MoveStats
@@ -117,16 +176,14 @@ public class Robot : MonoBehaviour
         [SerializeField]
         private float acceleration;
         [SerializeField]
-        private float jumpVelocity;
-        [SerializeField]
         private float maxVelocity;
+
 
         public static MoveStats Default {
             get {
                 return new MoveStats()
                 {
                     acceleration = 25,
-                    jumpVelocity = 800,
                     maxVelocity = 8
                 };
             }
@@ -137,14 +194,39 @@ public class Robot : MonoBehaviour
             set { acceleration = value; }
         }
 
-        public float JumpVelocity {
-            get { return jumpVelocity; }
-            set { jumpVelocity = value; }
-        }
-
         public float MaxVelocity {
             get { return maxVelocity; }
             set { maxVelocity = value; }
+        }
+    }
+
+    [Serializable]
+    public struct JumpStats
+    {
+        [SerializeField]
+        private float jumpReadyTime;
+        [SerializeField]
+        private float jumpVelocity;
+
+
+        public static JumpStats Default {
+            get {
+                return new JumpStats()
+                {
+                    jumpReadyTime = 0.5f,
+                    jumpVelocity = 800
+                };
+            }
+        }
+
+        public float JumpReadyTime {
+            get { return jumpReadyTime; }
+            set { jumpReadyTime = value; }
+        }
+
+        public float JumpVelocity {
+            get { return jumpVelocity; }
+            set { jumpVelocity = value; }
         }
     }
 
