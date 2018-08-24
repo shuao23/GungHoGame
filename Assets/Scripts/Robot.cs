@@ -6,11 +6,20 @@ public class Robot : MonoBehaviour
     [SerializeField]
     private Rigidbody2D rigidBod;
     [SerializeField]
-    private MoveStats moveStats;
+    private MoveStats stats = MoveStats.Default;
 
     private float deltaXQueue = 0;
     private bool jumpQueued = false;
 
+
+
+    public MoveStats Stats {
+        get { return stats; }
+    }
+
+    public Rigidbody2D Rigidbody {
+        get { return rigidBod; }
+    }
 
     public void Jump()
     {
@@ -67,22 +76,22 @@ public class Robot : MonoBehaviour
 
     private void ApplyJump()
     {
-        rigidBod.AddForce(Vector2.up * moveStats.JumpVelocity, ForceMode2D.Impulse);
+        rigidBod.AddForce(Vector2.up * stats.JumpVelocity, ForceMode2D.Impulse);
         jumpQueued = false;
     }
 
     private void ApplyMove(float deltaTime)
     {
         float currentXVelocity = rigidBod.velocity.x;
-        float targetXVelocity = deltaXQueue * moveStats.MaxVelocity;
+        float targetXVelocity = deltaXQueue * stats.MaxVelocity;
         float newVelocity = currentXVelocity;
         if (currentXVelocity < targetXVelocity)
         {
-            newVelocity = Mathf.Min(currentXVelocity + moveStats.Acceleration * deltaTime, targetXVelocity);
+            newVelocity = Mathf.Min(currentXVelocity + stats.Acceleration * deltaTime, targetXVelocity);
         }
         else if (currentXVelocity > targetXVelocity)
         {
-            newVelocity = Mathf.Max(currentXVelocity - moveStats.Acceleration * deltaTime, targetXVelocity);
+            newVelocity = Mathf.Max(currentXVelocity - stats.Acceleration * deltaTime, targetXVelocity);
         }
         rigidBod.velocity = new Vector2(newVelocity, rigidBod.velocity.y);
         deltaXQueue = 0;
@@ -96,22 +105,32 @@ public class Robot : MonoBehaviour
     {
         if (rigidBod == null)
         {
-            rigidBod = GetComponent<Rigidbody2D>();
+            rigidBod = GetComponent<Rigidbody2D>(); 
         }
         return rigidBod != null;
     }
 
 
     [Serializable]
-    public class MoveStats
+    public struct MoveStats
     {
         [SerializeField]
-        private float acceleration = 0.5f;
+        private float acceleration;
         [SerializeField]
-        private float jumpVelocity = 1;
+        private float jumpVelocity;
         [SerializeField]
-        private float maxVelocity = 2;
+        private float maxVelocity;
 
+        public static MoveStats Default {
+            get {
+                return new MoveStats()
+                {
+                    acceleration = 25,
+                    jumpVelocity = 800,
+                    maxVelocity = 8
+                };
+            }
+        }
 
         public float Acceleration {
             get { return acceleration; }
@@ -129,6 +148,23 @@ public class Robot : MonoBehaviour
         }
     }
 
+    public class MoveState
+    {
+        public Facing Facing { get; set; }
+
+        public bool IsFacingRight {
+            get { return Facing == Facing.Right; }
+        }
+
+        public bool IsFacingLeft {
+            get { return Facing == Facing.Left; }
+        }
+    }
+
+    public enum Facing
+    {
+        Right, Left
+    }
 
     public enum MoveMode
     {
