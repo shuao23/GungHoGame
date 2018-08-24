@@ -681,6 +681,28 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 300822713}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &598931240 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 100028, guid: 5c53ec4b53368423c8d252543d3a2905, type: 3}
+  m_PrefabInternal: {fileID: 1376938294}
+--- !u!95 &598931241 stripped
+Animator:
+  m_PrefabParentObject: {fileID: 9500000, guid: 5c53ec4b53368423c8d252543d3a2905,
+    type: 3}
+  m_PrefabInternal: {fileID: 1376938294}
+--- !u!114 &598931242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 598931240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e83ea21dbe4e2d4785dd5428b084bc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 598931241}
+  robotRigidbody: {fileID: 1640177090}
 --- !u!1 &618976854
 GameObject:
   m_ObjectHideFlags: 0
@@ -2435,7 +2457,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1640177088}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -23, y: 0, z: 0}
+  m_LocalPosition: {x: -64, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1376938295}
@@ -2490,9 +2512,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rigidBod: {fileID: 1640177090}
   moveStats:
-    acceleration: 10
+    acceleration: 20
     jumpVelocity: 800
-    maxVelocity: 5
+    maxVelocity: 8
 --- !u!1 &1644737226
 GameObject:
   m_ObjectHideFlags: 0

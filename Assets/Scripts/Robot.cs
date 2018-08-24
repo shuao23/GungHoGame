@@ -23,6 +23,7 @@ public class Robot : MonoBehaviour
     /// <param name="unitDeltaX">The horizontal velocity usually from -1 to 1</param>
     public void Move(float unitDeltaX, MoveMode mode = MoveMode.Override)
     {
+        unitDeltaX *= -1; //Becacuse x axis is opposite now
         switch (mode)
         {
             case MoveMode.Additive:
