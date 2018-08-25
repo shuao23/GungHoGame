@@ -20,7 +20,7 @@ public class RobotController : MonoBehaviour {
     private void FixedUpdate()
     {
         float unitDeltaX = 0;
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.S))
         {
             unitDeltaX += 1;
         }
@@ -35,7 +35,7 @@ public class RobotController : MonoBehaviour {
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             robot.Jump();
         }
