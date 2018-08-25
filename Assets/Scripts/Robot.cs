@@ -22,14 +22,20 @@ public class Robot : MonoBehaviour
     [SerializeField]
     private Collider2D feetCollider;
 
+    private RoboAttack attackQueue = RoboAttack.None;
     private float deltaXQueue = 0;
     private float jumpQueueTime = -1;
     private int groundCount = 0;
     private bool isLandStunned = false;
+    private RoboAttack attacking = 0;
 
 
     public MoveStats AirStats {
         get { return airStats; }
+    }
+
+    public RoboAttack Attacking {
+        get { return attacking; }
     }
 
     public MoveStats GroundStats {
@@ -64,6 +70,30 @@ public class Robot : MonoBehaviour
     }
 
 
+    public void Attack(RoboAttack attack, UpdateMode mode = UpdateMode.Override)
+    {
+        if (isLandStunned || !IsGrounded)
+        {
+            return;
+        }
+
+        switch (mode)
+        {
+            case UpdateMode.Override:
+                attackQueue = attack;
+                break;
+            case UpdateMode.Once:
+                if (attackQueue == RoboAttack.None)
+                {
+                    attackQueue = attack;
+                }
+                break;
+            case UpdateMode.Additive:
+            default:
+                throw new InvalidOperationException();
+        }
+    }
+
     public void Jump()
     {
         if (!JumpQueued)
@@ -76,9 +106,9 @@ public class Robot : MonoBehaviour
     /// Move on the horizontal axis. 
     /// </summary>
     /// <param name="unitDeltaX">The horizontal velocity usually from -1 to 1</param>
-    public void Move(float unitDeltaX, MoveMode mode = MoveMode.Override)
+    public void Move(float unitDeltaX, UpdateMode mode = UpdateMode.Override)
     {
-        if (isLandStunned)
+        if (isLandStunned || attacking != RoboAttack.None)
         {
             return;
         }
@@ -86,11 +116,17 @@ public class Robot : MonoBehaviour
         unitDeltaX *= -1; //Becacuse x axis is opposite now
         switch (mode)
         {
-            case MoveMode.Additive:
+            case UpdateMode.Additive:
                 deltaXQueue += unitDeltaX;
                 break;
-            case MoveMode.Override:
+            case UpdateMode.Override:
                 deltaXQueue = unitDeltaX;
+                break;
+            case UpdateMode.Once:
+                if (deltaXQueue == 0)
+                {
+                    deltaXQueue = unitDeltaX;
+                }
                 break;
             default:
                 throw new InvalidOperationException();
@@ -121,6 +157,11 @@ public class Robot : MonoBehaviour
         {
             if (isLandStunned)
             {
+                ApplyMove(landingStats, Time.fixedDeltaTime);
+            }
+            else if (attacking != RoboAttack.None)
+            {
+                //StartCoroutine(OnAttack());
                 ApplyMove(landingStats, Time.fixedDeltaTime);
             }
             else
@@ -154,7 +195,7 @@ public class Robot : MonoBehaviour
 
             if (groundCount == 1)
             {
-                float collisionVelocity = collision.relativeVelocity.magnitude;
+                float collisionVelocity = collision.relativeVelocity.y;
                 if (collisionVelocity >= jumpingStats.StunTriggerVelocity)
                 {
                     StartCoroutine(OnLandingStunned());
@@ -299,8 +340,15 @@ public class Robot : MonoBehaviour
         Right, Left
     }
 
-    public enum MoveMode
+    public enum UpdateMode
     {
-        Override, Additive
+        Override, Additive, Once
+    }
+
+    public enum RoboAttack
+    {
+        None = 0,
+        Normal = 1,
+        RocketPunch = 2
     }
 }

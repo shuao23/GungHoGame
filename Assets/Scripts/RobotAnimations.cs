@@ -162,10 +162,4 @@ public class RobotAnimations : MonoBehaviour
         Landing = 3,
         Attacking = 4
     }
-
-    private enum RobotAttackMode
-    {
-        normal = 0,
-        rocketPunch = 1
-    }
 }
