@@ -75,6 +75,11 @@ public class RobotAnimations : MonoBehaviour
                 return RobotState.Jumping;
             }
 
+            if (robot.IsLandStunned)
+            {
+                return RobotState.Landing;
+            }
+
             return RobotState.Locomotion;
         }
         else

@@ -6410,12 +6410,17 @@ MonoBehaviour:
   groundStats:
     acceleration: 30
     maxVelocity: 6
+  landingStats:
+    acceleration: 20
+    maxVelocity: 0
   airStats:
     acceleration: 5
     maxVelocity: 8
   jumpingStats:
     jumpReadyTime: 0.18
     jumpVelocity: 800
+    stunDuration: 0.35
+    stunTriggerVelocity: 5
   groundCollision:
     serializedVersion: 2
     m_Bits: 256

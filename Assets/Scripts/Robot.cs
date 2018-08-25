@@ -8,6 +8,12 @@ public class Robot : MonoBehaviour
     [SerializeField]
     private MoveStats groundStats = MoveStats.Default;
     [SerializeField]
+    private MoveStats landingStats = new MoveStats()
+    {
+        Acceleration = 20,
+        MaxVelocity = 0
+    };
+    [SerializeField]
     private MoveStats airStats = MoveStats.Default;
     [SerializeField]
     private JumpStats jumpingStats = JumpStats.Default;
@@ -19,6 +25,7 @@ public class Robot : MonoBehaviour
     private float deltaXQueue = 0;
     private float jumpQueueTime = -1;
     private int groundCount = 0;
+    private bool isLandStunned = false;
 
 
     public MoveStats AirStats {
@@ -33,12 +40,20 @@ public class Robot : MonoBehaviour
         get { return groundCount > 0; }
     }
 
+    public bool IsLandStunned {
+        get { return isLandStunned; }
+    }
+
     public JumpStats JumpingStats {
         get { return jumpingStats; }
     }
 
     public bool JumpQueued {
         get { return jumpQueueTime >= 0; }
+    }
+
+    public MoveStats LandingStats {
+        get { return landingStats; }
     }
 
     public Rigidbody2D Rigidbody { get; private set; }
@@ -63,6 +78,11 @@ public class Robot : MonoBehaviour
     /// <param name="unitDeltaX">The horizontal velocity usually from -1 to 1</param>
     public void Move(float unitDeltaX, MoveMode mode = MoveMode.Override)
     {
+        if (isLandStunned)
+        {
+            return;
+        }
+
         unitDeltaX *= -1; //Becacuse x axis is opposite now
         switch (mode)
         {
@@ -81,7 +101,7 @@ public class Robot : MonoBehaviour
     #region Unity Methods
     private void Awake()
     {
-        if(feetCollider == null)
+        if (feetCollider == null)
         {
             Debug.LogWarning("Feet collider not assinged. Disabling");
             enabled = false;
@@ -99,12 +119,19 @@ public class Robot : MonoBehaviour
 
         if (IsGrounded)
         {
-            if (ShouldJump)
+            if (isLandStunned)
             {
-                ApplyJump();
+                ApplyMove(landingStats, Time.fixedDeltaTime);
             }
+            else
+            {
+                if (ShouldJump)
+                {
+                    ApplyJump();
+                }
 
-            ApplyMove(groundStats, Time.fixedDeltaTime);
+                ApplyMove(groundStats, Time.fixedDeltaTime);
+            }
         }
         else
         {
@@ -119,11 +146,20 @@ public class Robot : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (IsGroundCollision(collision) && 
+        if (IsGroundCollision(collision) &&
             (ReferenceEquals(collision.collider, feetCollider) ||
             ReferenceEquals(collision.otherCollider, feetCollider)))
         {
             groundCount++;
+
+            if (groundCount == 1)
+            {
+                float collisionVelocity = collision.relativeVelocity.magnitude;
+                if (collisionVelocity >= jumpingStats.StunTriggerVelocity)
+                {
+                    StartCoroutine(OnLandingStunned());
+                }
+            }
         }
     }
 
@@ -133,6 +169,17 @@ public class Robot : MonoBehaviour
         {
             groundCount--;
         }
+    }
+    #endregion
+
+
+    #region Unity Coroutines
+    private IEnumerator OnLandingStunned()
+    {
+        isLandStunned = true;
+        deltaXQueue = 0;
+        yield return new WaitForSeconds(jumpingStats.StunDuration);
+        isLandStunned = false;
     }
     #endregion
 
@@ -169,6 +216,7 @@ public class Robot : MonoBehaviour
     {
         return (groundCollision.value & (1 << collision.gameObject.layer)) != 0;
     }
+
 
     [Serializable]
     public struct MoveStats
@@ -207,6 +255,10 @@ public class Robot : MonoBehaviour
         private float jumpReadyTime;
         [SerializeField]
         private float jumpVelocity;
+        [SerializeField]
+        private float stunDuration;
+        [SerializeField]
+        private float stunTriggerVelocity;
 
 
         public static JumpStats Default {
@@ -214,7 +266,9 @@ public class Robot : MonoBehaviour
                 return new JumpStats()
                 {
                     jumpReadyTime = 0.5f,
-                    jumpVelocity = 800
+                    jumpVelocity = 800,
+                    stunDuration = 1,
+                    StunTriggerVelocity = 10
                 };
             }
         }
@@ -228,18 +282,15 @@ public class Robot : MonoBehaviour
             get { return jumpVelocity; }
             set { jumpVelocity = value; }
         }
-    }
 
-    public class MoveState
-    {
-        public Facing Facing { get; set; }
-
-        public bool IsFacingRight {
-            get { return Facing == Facing.Right; }
+        public float StunDuration {
+            get { return stunDuration; }
+            set { value = stunDuration; }
         }
 
-        public bool IsFacingLeft {
-            get { return Facing == Facing.Left; }
+        public float StunTriggerVelocity {
+            get { return stunTriggerVelocity; }
+            set { value = stunTriggerVelocity; }
         }
     }
 
