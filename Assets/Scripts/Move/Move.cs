@@ -54,17 +54,22 @@ public abstract class Move : IMove
     /// Update move
     /// </summary>
     /// <param name="deltaTime">The change in time since last update</param>
-    public void Update(float deltaTime)
+    public bool Update(float deltaTime)
     {
         if (!Issued)
         {
-            return;
+            return false;
         }
         else if (!InRightCondition)
         {
             Close();
+            return false;
         }
-        NextMove(deltaTime);
+        else
+        {
+            NextMove(deltaTime);
+            return true;
+        }
     }
 
 
