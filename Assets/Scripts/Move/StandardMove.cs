@@ -7,9 +7,8 @@ public class StandardMove<T, S> : Move
     public bool Continous { get; set; }
     public T Motor { get; private set; }
     public S Stats { get; private set; }
-
-    public Action<T, S> OnMotorSetup;
-    public Action<T, S> OnPostMotorUpdate;
+    public Action<T, S> OnMotorSetup { get; set; }
+    public Action<T, S> OnPostMotorUpdate { get; set; }
 
     public StandardMove(string name, T motor, S stats) : base(name)
     {

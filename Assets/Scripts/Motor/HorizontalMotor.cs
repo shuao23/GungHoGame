@@ -1,17 +1,18 @@
 ﻿using System;
 using UnityEngine;
 
-public class HorizontalMotor : Motor<HorzontalMotorStats>
+public class HorizontalMotor : Motor<HorizontalMotorStats>
 {
+    public float Direction { get; set; }
 
-    public HorizontalMotor(Rigidbody2D rigidbody, HorzontalMotorStats stats) : base(rigidbody, stats) { }
-    public HorizontalMotor(Rigidbody2D rigidbody) : base(rigidbody, new HorzontalMotorStats()) { }
+    public HorizontalMotor(Rigidbody2D rigidbody, HorizontalMotorStats stats) : base(rigidbody, stats) { }
+    public HorizontalMotor(Rigidbody2D rigidbody) : base(rigidbody, new HorizontalMotorStats()) { }
 
 
     public override void Update(float deltaTime)
     {
-        float currVelX = rigidbody.velocity.x;
-        float targetXVelocity = -Stats.Direction * Stats.MaxVelocity;
+        float currVelX = Rigidbody.velocity.x;
+        float targetXVelocity = -Direction * Stats.MaxVelocity;
         float newVelocity = currVelX;
         if (currVelX < targetXVelocity)
         {
@@ -21,7 +22,7 @@ public class HorizontalMotor : Motor<HorzontalMotorStats>
         {
             newVelocity = Mathf.Max(currVelX - Stats.Acceleration * deltaTime, targetXVelocity);
         }
-        rigidbody.velocity = new Vector2(newVelocity, rigidbody.velocity.y);
+        Rigidbody.velocity = new Vector2(newVelocity, Rigidbody.velocity.y);
     }
 
 

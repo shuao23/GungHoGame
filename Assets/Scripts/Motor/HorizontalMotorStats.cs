@@ -15,8 +15,6 @@ public class HorizontalMotorStats
         set { acceleration = value; }
     }
 
-    public float Direction { get; set; }
-
     public float MaxVelocity {
         get { return maxVelocity; }
         set { maxVelocity = value; }

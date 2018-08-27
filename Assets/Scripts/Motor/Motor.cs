@@ -3,24 +3,39 @@ using UnityEngine;
 
 public abstract class Motor<T> where T : class
 {
-    protected Rigidbody2D rigidbody;
+    private Rigidbody2D rigidbody;
+    private T stats;
 
-    public T Stats { get; protected set; }
+    public T Stats {
+        get { return stats; }
+        set {
+            if (value == null)
+            {
+                throw new ArgumentNullException("Stats");
+            }
 
+            stats = value;
+        }
+    }
+
+    public Rigidbody2D Rigidbody {
+        get {
+            return rigidbody;
+        }
+
+        set {
+            if (value == null)
+            {
+                throw new ArgumentNullException("Rigidbody");
+            }
+
+            rigidbody = value;
+        }
+    }
 
     public Motor(Rigidbody2D rigidbody, T stats)
     {
-        if (rigidbody == null)
-        {
-            throw new ArgumentNullException("rigidbody");
-        }
-
-        if (stats == null)
-        {
-            throw new ArgumentNullException("motorStats");
-        }
-
-        this.rigidbody = rigidbody;
+        Rigidbody = rigidbody;
         Stats = stats;
     }
 

@@ -24,6 +24,11 @@ public class DelayedJumpMoveStats
     public JumpMotorStats JumpMotorStats {
         get { return jumpMotorStats; }
         set {
+            if(value == null)
+            {
+                throw new ArgumentNullException("JumpMotorStats");
+            }
+
             jumpMotorStats = value;
         }
     }

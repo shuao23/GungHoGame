@@ -9,6 +9,6 @@ public class JumpMotor : Motor<JumpMotorStats>
 
     public override void Update(float deltaTime)
     {
-        rigidbody.AddForce(Vector2.up * Stats.Velocity, ForceMode2D.Impulse);
+        Rigidbody.AddForce(Vector2.up * Stats.Velocity, ForceMode2D.Impulse);
     }
 }

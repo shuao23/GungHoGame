@@ -74,10 +74,8 @@ public class SequentialMoveGroup : Move
                     clip.Move.Issue();
                 }
 
-                Debug.Log(clip.Move.Name);
                 if (!clip.Move.Update(updateLength))
                 {
-                    Debug.Log("Not make it");
                     Close();
                 }
             }

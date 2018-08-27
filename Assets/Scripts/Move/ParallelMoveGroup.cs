@@ -4,13 +4,13 @@ using System.Collections.Generic;
 /// <summary>
 /// A move made up of multiple moves. When issued, the best move is used. Does not close until none of the moves are able to.
 /// </summary>
-public class ParallelMoveGroup<T> : Move where T: class, IMove
+public class ParallelMoveGroup : Move
 {
-    private T lastUsed;
-    private List<T> moves = new List<T>();
+    private IMove lastUsed;
+    private List<IMove> moves = new List<IMove>();
 
 
-    public T BestCandidate {
+    public IMove BestCandidate {
         get {
             for (int i = moves.Count - 1; i >= 0; i--)
             {
@@ -34,7 +34,7 @@ public class ParallelMoveGroup<T> : Move where T: class, IMove
     }
 
 
-    public void Register(T move)
+    public void Register(IMove move)
     {
         if (move == null)
         {
@@ -49,7 +49,7 @@ public class ParallelMoveGroup<T> : Move where T: class, IMove
     {
         for (int i = moves.Count - 1; i >= 0; i--)
         {
-            T move = moves[i];
+            IMove move = moves[i];
             move.Issue();
             if (move.Update(deltaTime))
             {
