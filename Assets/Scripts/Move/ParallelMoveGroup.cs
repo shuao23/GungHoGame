@@ -47,16 +47,21 @@ public class ParallelMoveGroup<T> : Move where T: class, IMove
 
     protected override void NextMove(float deltaTime)
     {
-        T best = BestCandidate;
-
-        if(best != lastUsed)
+        for (int i = moves.Count - 1; i >= 0; i--)
         {
-            lastUsed.Close();
-            best.Issue();
+            T move = moves[i];
+            move.Issue();
+            if (move.Update(deltaTime))
+            {
+                if(lastUsed != null && move != lastUsed)
+                {
+                    lastUsed.Close();
+                }
+                lastUsed = move;
+                return;
+            }
         }
-        best.Update(deltaTime);
-
-        lastUsed = best;
+        throw new NoMoveCandidatesException();
     }
 
     protected override void Reset()

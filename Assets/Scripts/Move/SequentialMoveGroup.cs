@@ -58,12 +58,12 @@ public class SequentialMoveGroup : Move
             {
                 clip.Move.Close();
             }
-            //else if future frames
+            //else if future clips
             else if (frameEndTime < clipStartTime)
             {
                 return;
             }
-            //else if current frames
+            //else if current clip
             else if (!(frameEndTime < clipStartTime))
             {
                 float updateStartTime = Mathf.Max(clipStartTime, frameStartTime);
@@ -73,10 +73,17 @@ public class SequentialMoveGroup : Move
                 {
                     clip.Move.Issue();
                 }
-                clip.Move.Update(updateLength);
+
+                Debug.Log(clip.Move.Name);
+                if (!clip.Move.Update(updateLength))
+                {
+                    Debug.Log("Not make it");
+                    Close();
+                }
             }
-            Close();
         }
+        //No more clips to be played so close
+        Close();
     }
 
 
