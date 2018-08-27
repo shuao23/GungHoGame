@@ -2,20 +2,32 @@
 
 public abstract class Move : IMove
 {
+    private string name;
+
     public bool Issued { get; private set; }
 
     public virtual bool InRightCondition {
         get { return OnInRightCondition == null ? false : OnInRightCondition(); }
     }
 
-    public string Name { get; set; }
+    public virtual string Name { get { return name; } }
 
     public Func<bool> OnInRightCondition { get; set; }
 
 
     public Move()
     {
-        Name = string.Empty;
+        name = string.Empty;
+    }
+
+    public Move(string name)
+    {
+        if (name == null)
+        {
+            throw new ArgumentNullException("name");
+        }
+
+        this.name = name;
     }
 
 
@@ -23,8 +35,8 @@ public abstract class Move : IMove
     {
         if (Issued)
         {
-            Reset();
             Issued = false;
+            Reset();
         }
     }
 
@@ -42,31 +54,21 @@ public abstract class Move : IMove
     /// Update move
     /// </summary>
     /// <param name="deltaTime">The change in time since last update</param>
-    /// <returns>True if the update suceeds</returns>
-    public bool TryUpdate(float deltaTime)
+    public void Update(float deltaTime)
     {
         if (!Issued)
         {
-            return false;
+            return;
         }
         else if (!InRightCondition)
         {
             Close();
-            return false;
         }
-        else if (TryNextMove(deltaTime))
-        {
-            return true;
-        }
-        else
-        {
-            Close();
-            return false;
-        }
+        NextMove(deltaTime);
     }
 
 
     protected virtual void Reset() { }
 
-    protected abstract bool TryNextMove(float deltaTime);
+    protected abstract void NextMove(float deltaTime);
 }

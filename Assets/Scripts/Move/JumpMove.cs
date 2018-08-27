@@ -3,14 +3,14 @@ using UnityEngine;
 
 public class JumpMove : Move
 {
-    public  JumpMotor Motor { get; private set; }
+    public JumpMotor Motor { get; private set; }
     public MoveStats Stats { get; private set; }
 
-    public JumpMove(MoveStats stats, JumpMotor motor)
+    public JumpMove(string name, MoveStats stats, JumpMotor motor) : base(name)
     {
         if (stats == null)
         {
-            throw new ArgumentNullException("motor");
+            throw new ArgumentNullException("stats");
         }
 
         if (motor == null)
@@ -22,10 +22,10 @@ public class JumpMove : Move
         Motor = motor;
     }
 
-    protected override bool TryNextMove(float deltaTime)
+    protected override void NextMove(float deltaTime)
     {
         Motor.Update(deltaTime);
-        return false;
+        Close();
     }
 
 

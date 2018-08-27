@@ -145,7 +145,7 @@ public class Character : MonoBehaviour
             OnInRightCondition = () => { return !foot.IsGrounded; }
         };
 
-        MoveGroup standardMoves = new MoveGroup();
+        ParallelMoveGroup standardMoves = new ParallelMoveGroup();
 
         StandardMove groundMove = new StandardMove(groundMoveStats, StandardMotor)
         {
@@ -161,7 +161,7 @@ public class Character : MonoBehaviour
 
         JumpMove jumpMove = new JumpMove(jumpMoveStats.JumpMoveStats, JumpMotor);
 
-        TimedMove delayedJumpMove = new TimedMove()
+        SequentialMoveGroup delayedJumpMove = new SequentialMoveGroup()
         {
             Name = "jump",
         };

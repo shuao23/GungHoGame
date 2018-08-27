@@ -6,8 +6,24 @@ public class MoveManager
     private List<IMove> moves = new List<IMove>();
 
 
-    public IMove Current { get; private set; }
+    public IMove BestCandidate {
+        get {
+            for (int i = moves.Count - 1; i >= 0; i--)
+            {
+                if (moves[i].InRightCondition && moves[i].Issued)
+                {
+                    return moves[i];
+                }
+            }
+            throw new NoMoveCandidatesException();
+        }
+    }
 
+
+    public void Clear()
+    {
+        moves.Clear();
+    }
 
     public void Register(IMove move)
     {
@@ -23,29 +39,8 @@ public class MoveManager
     /// Update only the highest prority move
     /// </summary>
     /// <param name="deltaTime">Change in time</param>
-    /// <returns>True if update succeeded. False if no move is found</returns>
-    public bool TryUpdate(float deltaTime)
+    public void Update(float deltaTime)
     {
-        Current = FindFirstMoveCandidate();
-        if(Current != null)
-        {
-            Current.TryUpdate(deltaTime);
-            return true;
-        }
-
-        return false;
-    }
-
-
-    private IMove FindFirstMoveCandidate()
-    {
-        for (int i = moves.Count - 1; i >= 0; i--)
-        {
-            if (moves[i].InRightCondition && moves[i].Issued)
-            {
-                return moves[i];
-            }
-        }
-        return null;
+        BestCandidate.Update(deltaTime);
     }
 }

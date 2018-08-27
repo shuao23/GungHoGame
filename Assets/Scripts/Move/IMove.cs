@@ -6,5 +6,5 @@
 
     void Issue(bool doOverride = false);
     void Close();
-    bool TryUpdate(float deltaTime);
+    void Update(float deltaTime);
 }

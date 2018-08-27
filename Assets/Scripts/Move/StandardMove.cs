@@ -12,7 +12,7 @@ public class StandardMove : Move
     {
         if(stats == null)
         {
-            throw new ArgumentNullException("motor");
+            throw new ArgumentNullException("stats");
         }
 
         if (motor == null)
@@ -24,12 +24,15 @@ public class StandardMove : Move
         Motor = motor;
     }
 
-    protected override bool TryNextMove(float deltaTime)
+    protected override void NextMove(float deltaTime)
     {
         Motor.Acceleration = Stats.Acceleration;
         Motor.MaxVelocity = Stats.MaxVelocity;
         Motor.Update(deltaTime);
-        return Continous;
+        if (!Continous)
+        {
+            Close();
+        }
     }
 
 
