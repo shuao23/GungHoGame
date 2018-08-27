@@ -5,19 +5,39 @@ using UnityEngine;
 public class DelayedJumpMoveStats
 {
     [SerializeField]
-    private JumpMove.MoveStats jumpMoveStats;
-
+    private JumpMotorStats jumpMotorStats = new JumpMotorStats()
+    {
+        Velocity = 800f
+    };
     [SerializeField]
-    private MoveClip clip;
-    
+    private MoveClip standardMoveClip = new MoveClip()
+    {
+        Duration = 0.18f
+    };
 
-    public JumpMove.MoveStats JumpMoveStats {
-        get { return jumpMoveStats; }
-        set { jumpMoveStats = value; }
+    private MoveClip jumpMoveClip = new MoveClip()
+    {
+        Duration = 0
+    };
+
+
+    public JumpMotorStats JumpMotorStats {
+        get { return jumpMotorStats; }
+        set {
+            jumpMotorStats = value;
+        }
     }
 
-    public MoveClip Clip {
-        get { return clip; }
-        set { clip = value; }
+
+    public MoveClip GetStandardMoveClip(IMove move)
+    {
+        standardMoveClip.Move = move;
+        return standardMoveClip;
+    }
+
+    public MoveClip GetJumpMoveClip(IMove move)
+    {
+        jumpMoveClip.Move = move;
+        return jumpMoveClip;
     }
 }
