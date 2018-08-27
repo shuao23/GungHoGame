@@ -44,15 +44,17 @@ public class Character : MonoBehaviour
     #region Properties
     private MoveManager Root { get; set; }
 
-    public string CurrentState { get { return Root.Current == null ? String.Empty : Root.Current.Name; } }
+    public IMove CurrentMove {
+        get {
+            return Root.BestCandidate;
+        }
+    }
 
 
     private IMove JumpMove { get; set; }
 
     private IMove StandardMoves { get; set; }
 
-
-    public HorizontalMotor DefaultMotor { get; set; }
 
     public JumpMotor JumpMotor { get; set; }
 
@@ -102,10 +104,8 @@ public class Character : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!Root.TryUpdate(Time.fixedDeltaTime))
-        {
-            throw new InvalidOperationException("No valid states");
-        }
+        Root.Update(Time.fixedDeltaTime);
+        Debug.Log(CurrentMove.Name);
     }
 
 
@@ -121,7 +121,6 @@ public class Character : MonoBehaviour
     private void InitializeMotors()
     {
         StandardMotor = new HorizontalMotor(rigidBody);
-        DefaultMotor = new HorizontalMotor(rigidBody);
         JumpMotor = new JumpMotor(rigidBody);
     }
 
@@ -129,42 +128,21 @@ public class Character : MonoBehaviour
     {
         MoveManager root = new MoveManager();
 
-        DefaultMoves defaultMoves = new DefaultMoves();
+        ParallelMoveGroup<StandardMove> standardMoves = new ParallelMoveGroup<StandardMove>();
 
-        StandardMove defaultGroundMove = new StandardMove(groundMoveStats, DefaultMotor)
+        StandardMove groundMove = new StandardMove("ground", groundMoveStats, StandardMotor)
         {
-            Continous = true,
-            Name = "ground",
             OnInRightCondition = () => { return foot.IsGrounded; }
         };
 
-        StandardMove defaultAirMove = new StandardMove(airMoveStats, DefaultMotor)
+        StandardMove airMove = new StandardMove("air", airMoveStats, StandardMotor)
         {
-            Continous = true,
-            Name = "air",
             OnInRightCondition = () => { return !foot.IsGrounded; }
         };
 
-        ParallelMoveGroup standardMoves = new ParallelMoveGroup();
+        JumpMove jumpMove = new JumpMove("jump", jumpMoveStats.JumpMoveStats, JumpMotor);
 
-        StandardMove groundMove = new StandardMove(groundMoveStats, StandardMotor)
-        {
-            Name = "ground",
-            OnInRightCondition = () => { return foot.IsGrounded; }
-        };
-
-        StandardMove airMove = new StandardMove(airMoveStats, StandardMotor)
-        {
-            Name = "air",
-            OnInRightCondition = () => { return !foot.IsGrounded; }
-        };
-
-        JumpMove jumpMove = new JumpMove(jumpMoveStats.JumpMoveStats, JumpMotor);
-
-        SequentialMoveGroup delayedJumpMove = new SequentialMoveGroup()
-        {
-            Name = "jump",
-        };
+        SequentialMoveGroup delayedJumpMove = new SequentialMoveGroup("jump");
 
 
         MoveClip jumpMoveClip = jumpMoveStats.Clip;
@@ -176,10 +154,6 @@ public class Character : MonoBehaviour
         };
 
 
-        root.Register(defaultMoves);
-        defaultMoves.Register(defaultGroundMove);
-        defaultMoves.Register(defaultAirMove);
-
         root.Register(standardMoves);
         standardMoves.Register(groundMove);
         standardMoves.Register(airMove);
@@ -187,8 +161,6 @@ public class Character : MonoBehaviour
         root.Register(delayedJumpMove);
         delayedJumpMove.Register(jumpMoveClip);
         delayedJumpMove.Register(jumpClip);
-
-        defaultMoves.Issue();
 
         Root = root;
         StandardMoves = standardMoves;

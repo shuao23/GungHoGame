@@ -8,7 +8,7 @@ public class StandardMove : Move
     public MoveStats Stats { get; private set; }
 
 
-    public StandardMove(MoveStats stats, HorizontalMotor motor)
+    public StandardMove(string name, MoveStats stats, HorizontalMotor motor) : base(name)
     {
         if(stats == null)
         {
