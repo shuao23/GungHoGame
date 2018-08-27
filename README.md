@@ -1,6 +1,6 @@
-# Gung Ho Game
+# Sample Game
 
-## Instructions from Gung Ho
+## Instructions
 Given the included robot model and animations, please create a game. The gameplay should be 2D side-scrolling perspective (but does not need to scroll necessarily). The code should be in either Github or Bitbucket. Please make commits as you would in a real project.
 
 ### Requirements
