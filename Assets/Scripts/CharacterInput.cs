@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RobotController : MonoBehaviour {
+public class CharacterInput : MonoBehaviour
+{
 
     [SerializeField]
-    private Robot robot;
+    private Character character;
 
 
     private void Awake()
     {
-        if (!TryFindRobot())
+        if (!TryFindCharacter())
         {
-            Debug.LogWarning("Robot not assigned nor found. Disabling");
+            Debug.LogWarning("Character not assigned nor found. Disabling");
             enabled = false;
             return;
         }
@@ -31,29 +32,32 @@ public class RobotController : MonoBehaviour {
             unitDeltaX -= 1;
         }
 
-        robot.Move(unitDeltaX);
+        if (unitDeltaX != 0)
+        {
+            character.Move(unitDeltaX);
+        }
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            robot.Jump();
+            character.Jump();
         }
     }
 
     private void Reset()
     {
-        TryFindRobot();
+        TryFindCharacter();
     }
 
 
-    private bool TryFindRobot()
+    private bool TryFindCharacter()
     {
-        if(robot == null)
+        if (character == null)
         {
-            robot = GetComponent<Robot>();
+            character = GetComponent<Character>();
         }
-        return robot != null;
+        return character != null;
     }
 }

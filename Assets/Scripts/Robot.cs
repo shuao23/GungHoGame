@@ -141,6 +141,7 @@ public class Robot : MonoBehaviour
         {
             Debug.LogWarning("Feet collider not assinged. Disabling");
             enabled = false;
+            return;
         }
 
         Rigidbody = GetComponent<Rigidbody2D>();
@@ -227,6 +228,7 @@ public class Robot : MonoBehaviour
 
     private void ApplyJump()
     {
+
         Rigidbody.AddForce(Vector2.up * jumpingStats.JumpVelocity, ForceMode2D.Impulse);
         ClearJumpQueue();
     }
@@ -335,10 +337,6 @@ public class Robot : MonoBehaviour
         }
     }
 
-    public enum Facing
-    {
-        Right, Left
-    }
 
     public enum UpdateMode
     {

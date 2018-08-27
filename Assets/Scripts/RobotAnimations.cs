@@ -33,12 +33,14 @@ public class RobotAnimations : MonoBehaviour
         {
             Debug.LogWarning("Rigidbody not assigned nor found. Disabling");
             enabled = false;
+            return;
         }
 
         if (robot == null)
         {
             Debug.LogWarning("Robot not assigned. Disabling");
             enabled = false;
+            return;
         }
     }
 
