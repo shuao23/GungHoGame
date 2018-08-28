@@ -43,6 +43,11 @@ public class CharacterKeyInput : MonoBehaviour
         {
             character.Jump();
         }
+
+        if (Input.GetMouseButton(0))
+        {
+            character.Attack(0);
+        }
     }
 
     private void Reset()

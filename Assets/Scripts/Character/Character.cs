@@ -45,16 +45,14 @@ public class Character : MonoBehaviour
         Velocity = 800
     };
     [SerializeField]
-    [Tooltip("Edit during playtime has no effect")]
     private float jumpReadyTime = 0.18f;
     [Header("Landing")]
     [SerializeField]
-    [Tooltip("Edit during playtime has no effect")]
     private float landDuration = 0.35f;
     [SerializeField]
     private float landTriggerVelocity = 5;
     [SerializeField]
-    [Tooltip("Edit during playtime has no effect")]
+    [Header("Attacking")]
     private float attackDuration = 2;
 
     private HorizontalMotor standardMotor;
@@ -89,9 +87,9 @@ public class Character : MonoBehaviour
     #region Public Methods
     public void Attack(int attackNumber)
     {
-        if (!attackMove.Issued)
+        if (!attackMove.Issued && lastUpdated.Id != ID_ATTACK)
         {
-            attackMove.Duration = 3;
+            attackMove.Duration = attackDuration;
             attackMove.Issue();
         }
     }
@@ -188,8 +186,8 @@ public class Character : MonoBehaviour
             motor.Direction = 0;
         };
 
-        Func<bool> IsGrounded = () => { return foot.IsGrounded; };
-        Func<bool> IsNotGrounded = () => { return !foot.IsGrounded; };
+        Func<bool> isGrounded = () => { return foot.IsGrounded; };
+        Func<bool> isNotGrounded = () => { return !foot.IsGrounded; };
 
 
         root = new MoveManager();
@@ -198,27 +196,27 @@ public class Character : MonoBehaviour
 
         HorizontalMove groundMove = new HorizontalMove(ID_GROUND, standardMotor, groundMotorStats)
         {
-            OnInRightCondition = IsGrounded,
+            OnInRightCondition = isGrounded,
             OnPostMotorUpdate = ResetMotorDirection
         };
 
         HorizontalMove airMove = new HorizontalMove(ID_AIR, standardMotor, airMotorStats)
         {
-            OnInRightCondition = IsNotGrounded,
+            OnInRightCondition = isNotGrounded,
             OnPostMotorUpdate = ResetMotorDirection
         };
 
         jumpSetupMove = new HorizontalMove(ID_JUMP, standardMotor, groundMotorStats)
         {
             Duration = jumpReadyTime,
-            OnInRightCondition = IsGrounded,
+            OnInRightCondition = isGrounded,
             OnPostMotorUpdate = ResetMotorDirection
         };
 
         JumpMove jumpUpMove = new JumpMove(ID_JUMP, jumpMotor, jumpMotorStats)
         {
             Duration = 0,
-            OnInRightCondition = IsGrounded
+            OnInRightCondition = isGrounded
         };
 
         jumpMove = new SequentialMoveGroup(ID_JUMP);
@@ -226,13 +224,13 @@ public class Character : MonoBehaviour
         landMove = new HorizontalMove(ID_LAND, rootedMotor, rootedMotorStats)
         {
             Duration = landDuration,
-            OnInRightCondition = IsGrounded,
+            OnInRightCondition = isGrounded,
             OnMotorSetup = null
         };
 
         attackMove = new HorizontalMove(ID_ATTACK, rootedMotor, rootedMotorStats)
         {
-            OnInRightCondition = IsGrounded,
+            OnInRightCondition = isGrounded,
             OnMotorSetup = null
         };
 
