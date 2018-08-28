@@ -19,7 +19,7 @@ public class SmoothVerticalFactor
     public void Update(float deltaTime, float velocityY)
     {
         float vertTarget = SmoothNormalize(velocityY, normalizePower);
-        Mathf.Lerp(NormalizedVertical, vertTarget, deltaTime * dampingRate);
+        NormalizedVertical = Mathf.Lerp(NormalizedVertical, vertTarget, deltaTime * dampingRate);
     }
 
     private float SmoothNormalize(float value, float pow)
