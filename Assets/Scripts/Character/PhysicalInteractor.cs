@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class Foot : MonoBehaviour
+public class PhysicalInteractor : MonoBehaviour
 {
     [SerializeField]
     private Collider2D feetCollider;

@@ -1193,7 +1193,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigidBody: {fileID: 50021748049950382}
-  foot: {fileID: 114438644882070952}
+  interactor: {fileID: 114438644882070952}
   groundMotorStats:
     acceleration: 30
     maxVelocity: 6

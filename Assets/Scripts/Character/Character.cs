@@ -18,7 +18,7 @@ public class Character : MonoBehaviour
     [SerializeField]
     private Rigidbody2D rigidBody;
     [SerializeField]
-    private Foot foot;
+    private PhysicalInteractor interactor;
     [Header("Horizontal Movement")]
     [SerializeField]
     private HorizontalMotorStats groundMotorStats = new HorizontalMotorStats()
@@ -130,8 +130,9 @@ public class Character : MonoBehaviour
 
     private void OnEnable()
     {
-        foot.OnLanding += OnLanding;
+        interactor.OnLanding += OnLanding;
     }
+
 
     private void FixedUpdate()
     {
@@ -145,7 +146,7 @@ public class Character : MonoBehaviour
 
     private void OnDisable()
     {
-        foot.OnLanding -= OnLanding;
+        interactor.OnLanding -= OnLanding;
     }
 
     private void Reset()
@@ -186,8 +187,8 @@ public class Character : MonoBehaviour
             motor.Direction = 0;
         };
 
-        Func<bool> isGrounded = () => { return foot.IsGrounded; };
-        Func<bool> isNotGrounded = () => { return !foot.IsGrounded; };
+        Func<bool> isGrounded = () => { return interactor.IsGrounded; };
+        Func<bool> isNotGrounded = () => { return !interactor.IsGrounded; };
 
 
         root = new MoveManager();
@@ -258,11 +259,11 @@ public class Character : MonoBehaviour
 
     private bool TryFindFoot()
     {
-        if (foot == null)
+        if (interactor == null)
         {
-            foot = GetComponent<Foot>();
+            interactor = GetComponent<PhysicalInteractor>();
         }
-        return foot != null;
+        return interactor != null;
     }
 
     private bool TryFindRigidbody()
