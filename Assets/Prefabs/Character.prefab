@@ -1148,6 +1148,7 @@ MonoBehaviour:
   jumpReadyTime: 0.17
   landDuration: 0.35
   landTriggerVelocity: 5
+  attackDuration: 1.8
 --- !u!114 &114364946977230718
 MonoBehaviour:
   m_ObjectHideFlags: 1
