@@ -3,6 +3,7 @@
 public abstract class Move : IMove
 {
     private readonly int id;
+    private bool updated;
 
     public bool Issued { get; private set; }
 
@@ -13,6 +14,10 @@ public abstract class Move : IMove
     public virtual int Id { get { return id; } }
 
     public Func<bool> OnInRightCondition { get; set; }
+
+
+    public event EventHandler OnMoveStart;
+    public event EventHandler OnMoveEnd;
 
 
     public Move()
@@ -30,6 +35,11 @@ public abstract class Move : IMove
     {
         if (Issued)
         {
+            if (updated && OnMoveEnd != null)
+            {
+                OnMoveEnd(this, EventArgs.Empty);
+            }
+            updated = false;
             Issued = false;
             Reset();
         }
@@ -62,6 +72,15 @@ public abstract class Move : IMove
         }
         else
         {
+            if (!updated)
+            {
+                if (OnMoveStart != null)
+                {
+                    OnMoveStart(this, EventArgs.Empty);
+                }
+                updated = true;
+            }
+
             NextMove(deltaTime);
             return true;
         }
