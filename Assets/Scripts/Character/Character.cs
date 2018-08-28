@@ -11,6 +11,7 @@ public class Character : MonoBehaviour
     public const int ID_AIR = 1;
     public const int ID_JUMP = 2;
     public const int ID_LAND = 3;
+    public const int ID_ATTACK = 4;
     #endregion
 
     #region Fields
@@ -52,6 +53,9 @@ public class Character : MonoBehaviour
     private float landDuration = 0.35f;
     [SerializeField]
     private float landTriggerVelocity = 5;
+    [SerializeField]
+    [Tooltip("Edit during playtime has no effect")]
+    private float attackDuration = 2;
 
     private HorizontalMotor standardMotor;
     private JumpMotor jumpMotor;
@@ -61,8 +65,10 @@ public class Character : MonoBehaviour
     private IMove lastUpdated;
 
     private ParallelMoveGroup standardMoves;
+    private HorizontalMove jumpSetupMove;
     private SequentialMoveGroup jumpMove;
     private HorizontalMove landMove;
+    private HorizontalMove attackMove;
     #endregion
 
 
@@ -81,9 +87,13 @@ public class Character : MonoBehaviour
 
 
     #region Public Methods
-    public void Attack()
+    public void Attack(int attackNumber)
     {
-        throw new NotImplementedException();
+        if (!attackMove.Issued)
+        {
+            attackMove.Duration = 3;
+            attackMove.Issue();
+        }
     }
 
     public void Jump()
@@ -145,6 +155,19 @@ public class Character : MonoBehaviour
         TryFindFoot();
         TryFindRigidbody();
     }
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (Initialized)
+        {
+            //Kind of hacky but in order to sync inspector variables and non serialized variables
+            jumpSetupMove.Duration = jumpReadyTime;
+            landMove.Duration = landDuration;
+            attackMove.Duration = attackDuration;
+        }
+    }
+#endif
     #endregion
 
 
@@ -185,7 +208,7 @@ public class Character : MonoBehaviour
             OnPostMotorUpdate = ResetMotorDirection
         };
 
-        HorizontalMove jumpSetupMove = new HorizontalMove(ID_JUMP, standardMotor, groundMotorStats)
+        jumpSetupMove = new HorizontalMove(ID_JUMP, standardMotor, groundMotorStats)
         {
             Duration = jumpReadyTime,
             OnInRightCondition = IsGrounded,
@@ -207,6 +230,12 @@ public class Character : MonoBehaviour
             OnMotorSetup = null
         };
 
+        attackMove = new HorizontalMove(ID_ATTACK, rootedMotor, rootedMotorStats)
+        {
+            OnInRightCondition = IsGrounded,
+            OnMotorSetup = null
+        };
+
         //Register
         root.Register(standardMoves);
         standardMoves.Register(airMove);
@@ -215,6 +244,8 @@ public class Character : MonoBehaviour
         root.Register(jumpMove);
         jumpMove.Register(jumpSetupMove);
         jumpMove.Register(jumpUpMove);
+
+        root.Register(attackMove);
 
         root.Register(landMove);
     }
