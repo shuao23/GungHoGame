@@ -1144,7 +1144,7 @@ MonoBehaviour:
     acceleration: 50
     maxVelocity: 0
   jumpMotorStats:
-    velocity: 800
+    velocity: 1000
   jumpReadyTime: 0.17
   landDuration: 0.35
   landTriggerVelocity: 5
