@@ -2,7 +2,7 @@
 
 public abstract class Move : IMove
 {
-    private readonly string name;
+    private readonly int id;
 
     public bool Issued { get; private set; }
 
@@ -10,24 +10,19 @@ public abstract class Move : IMove
         get { return OnInRightCondition == null ? false : OnInRightCondition(); }
     }
 
-    public virtual string Name { get { return name; } }
+    public virtual int Id { get { return id; } }
 
     public Func<bool> OnInRightCondition { get; set; }
 
 
     public Move()
     {
-        name = string.Empty;
+        id = -1;
     }
 
-    public Move(string name)
+    public Move(int id)
     {
-        if (name == null)
-        {
-            throw new ArgumentNullException("name");
-        }
-
-        this.name = name;
+        this.id = id;
     }
 
 

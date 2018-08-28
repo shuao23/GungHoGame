@@ -45,7 +45,7 @@ public class SequentialMoveGroup : Move, ITimedMove
         }
     }
 
-    public SequentialMoveGroup(string name) : base(name) { }
+    public SequentialMoveGroup(int id) : base(id) { }
 
 
     public void Register(ITimedMove move)

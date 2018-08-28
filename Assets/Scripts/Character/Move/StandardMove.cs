@@ -14,7 +14,7 @@ public class StandardMove<T, S> : Move, ITimedMove
     public Action<T, S> DefaultOnMotorSetup { get; private set; }
     public Action<T, S> OnPostMotorUpdate { get; set; }
 
-    public StandardMove(string name, T motor, S stats) : base(name)
+    public StandardMove(int id, T motor, S stats) : base(id)
     {
         if (motor == null)
         {

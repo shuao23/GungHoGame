@@ -1,6 +1,6 @@
 ﻿public interface IMove
 {
-    string Name { get; }
+    int Id { get; }
     bool Issued { get; }
     bool InRightCondition { get; }
 

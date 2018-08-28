@@ -27,9 +27,9 @@ public class ParallelMoveGroup : Move
         get { return true; }
     }
 
-    public override string Name {
+    public override int Id {
         get {
-            return BestCandidate.Name;
+            return BestCandidate.Id;
         }
     }
 
