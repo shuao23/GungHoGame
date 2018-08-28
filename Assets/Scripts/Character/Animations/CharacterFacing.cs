@@ -21,6 +21,13 @@ public class CharacterFacing
 
     public bool IsFacingRight { get; private set; }
 
+
+    public CharacterFacing()
+    {
+        IsFacingRight = true;
+    }
+
+
     public void Update(float deltaTime, float velocityX)
     {
         if (velocityX < 0)
