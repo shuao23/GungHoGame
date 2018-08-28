@@ -12,6 +12,7 @@ public class Character : MonoBehaviour
     public const int ID_JUMP = 2;
     public const int ID_LAND = 3;
     public const int ID_ATTACK = 4;
+    public const int ID_ROCKET_ATTACK = 5;
     #endregion
 
     #region Fields
@@ -53,7 +54,9 @@ public class Character : MonoBehaviour
     private float landTriggerVelocity = 5;
     [SerializeField]
     [Header("Attacking")]
-    private float attackDuration = 2;
+    private float attackDuration = 1.2f;
+    [SerializeField]
+    private float rocketAttackDuration = 2.5f;
 
     private HorizontalMotor standardMotor;
     private JumpMotor jumpMotor;
@@ -67,6 +70,8 @@ public class Character : MonoBehaviour
     private SequentialMoveGroup jumpMove;
     private HorizontalMove landMove;
     private HorizontalMove attackMove;
+
+    private int lastAttack;
     #endregion
 
 
@@ -85,13 +90,14 @@ public class Character : MonoBehaviour
 
 
     #region Public Methods
-    public void Attack(int attackNumber)
+    public void Attack()
     {
-        if (!attackMove.Issued && lastUpdated.Id != ID_ATTACK)
-        {
-            attackMove.Duration = attackDuration;
-            attackMove.Issue();
-        }
+        AttackHelper(ID_ATTACK, attackDuration);
+    }
+
+    public void RocketAttack()
+    {
+        AttackHelper(ID_ROCKET_ATTACK, rocketAttackDuration);
     }
 
     public void Jump()
@@ -163,7 +169,6 @@ public class Character : MonoBehaviour
             //Kind of hacky but in order to sync inspector variables and non serialized variables
             jumpSetupMove.Duration = jumpReadyTime;
             landMove.Duration = landDuration;
-            attackMove.Duration = attackDuration;
         }
     }
 #endif
@@ -171,6 +176,17 @@ public class Character : MonoBehaviour
 
 
     #region Private Methods
+    //Temporary solution for different types of attacking
+    private void AttackHelper(int attackId, float duration)
+    {
+        if (!attackMove.Issued && lastUpdated.Id != attackId)
+        {
+            attackMove.SetId(attackId);
+            attackMove.Duration = duration;
+            attackMove.Issue();
+        }
+    }
+
     private void InitializeMotors()
     {
         standardMotor = new HorizontalMotor(rigidBody);

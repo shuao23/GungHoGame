@@ -46,7 +46,12 @@ public class CharacterKeyInput : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
-            character.Attack(0);
+            character.Attack();
+        }
+
+        if (Input.GetMouseButton(1))
+        {
+            character.RocketAttack();
         }
     }
 
