@@ -31,7 +31,7 @@ public class RobotAnimations : MonoBehaviour
     {
         if (!TryFindAnimator())
         {
-            Debug.LogWarning("Rigidbody not assigned nor found. Disabling");
+            Debug.LogWarning("Animator not assigned nor found. Disabling");
             enabled = false;
             return;
         }
