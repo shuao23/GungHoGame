@@ -20,6 +20,12 @@ public class Character : MonoBehaviour
     private Rigidbody2D rigidBody;
     [SerializeField]
     private PhysicalInteractor interactor;
+    [SerializeField]
+    private AttackVolume rightHand;
+    [SerializeField]
+    private AttackVolume leftHand;
+    [SerializeField]
+    private DamageVolume damageVolume;
     [Header("Horizontal Movement")]
     [SerializeField]
     private HorizontalMotorStats groundMotorStats = new HorizontalMotorStats()
@@ -115,9 +121,9 @@ public class Character : MonoBehaviour
     #region Unity Methods
     private void Awake()
     {
-        if (!TryFindFoot())
+        if (!TryFindPhysicalInteractor())
         {
-            Debug.LogWarning("Foot not assinged nor found. Disabling");
+            Debug.LogWarning("PhysicalInteractor not assinged nor found. Disabling");
             enabled = false;
             return;
         }
@@ -129,6 +135,20 @@ public class Character : MonoBehaviour
             return;
         }
 
+        if(leftHand == null || rightHand == null)
+        {
+            Debug.LogWarning("attack volume not assinged. Disabling");
+            enabled = false;
+            return; 
+        }
+
+        if(damageVolume == null)
+        {
+            Debug.LogWarning("damage volume not assinged. Disabling");
+            enabled = false;
+            return;
+        }
+
         InitializeMotors();
         InitializeAndRegisterMoves();
         Initialized = true;
@@ -136,9 +156,11 @@ public class Character : MonoBehaviour
 
     private void OnEnable()
     {
-        interactor.OnLanding += OnLanding;
+        interactor.OnLanding += Interactor_OnLanding;
+        attackMove.OnMoveStart += AttackMove_OnMoveStart;
+        attackMove.OnMoveEnd += AttackMove_OnMoveEnd;
+        damageVolume.OnDamaged += DamageVolume_OnDamaged; ;
     }
-
 
     private void FixedUpdate()
     {
@@ -152,12 +174,15 @@ public class Character : MonoBehaviour
 
     private void OnDisable()
     {
-        interactor.OnLanding -= OnLanding;
+        interactor.OnLanding -= Interactor_OnLanding;
+        attackMove.OnMoveStart -= AttackMove_OnMoveStart;
+        attackMove.OnMoveEnd -= AttackMove_OnMoveEnd;
+        damageVolume.OnDamaged -= DamageVolume_OnDamaged;
     }
 
     private void Reset()
     {
-        TryFindFoot();
+        TryFindPhysicalInteractor();
         TryFindRigidbody();
     }
 
@@ -172,6 +197,42 @@ public class Character : MonoBehaviour
         }
     }
 #endif
+    #endregion
+
+
+    #region Event Handlers
+    private void AttackMove_OnMoveStart(object sender, EventArgs e)
+    {
+        IMove move = sender as IMove;
+
+        if (move != null)
+        {
+            leftHand.IsEnabled = true;
+        }
+    }
+
+    private void AttackMove_OnMoveEnd(object sender, EventArgs e)
+    {
+        IMove move = sender as IMove;
+
+        if (move != null)
+        {
+            leftHand.IsEnabled = false;
+        }
+    }
+
+    private void DamageVolume_OnDamaged(object sender, DamageVolume.DamageEventArgs e)
+    {
+        Debug.Log("damaged");
+    }
+
+    private void Interactor_OnLanding(object sender, LandingEventArgs eventArgs)
+    {
+        if (eventArgs.Velocity.y >= landTriggerVelocity)
+        {
+            landMove.Issue();
+        }
+    }
     #endregion
 
 
@@ -265,15 +326,7 @@ public class Character : MonoBehaviour
         root.Register(landMove);
     }
 
-    private void OnLanding(object sender, LandingEventArgs eventArgs)
-    {
-        if (eventArgs.Velocity.y >= landTriggerVelocity)
-        {
-            landMove.Issue();
-        }
-    }
-
-    private bool TryFindFoot()
+    private bool TryFindPhysicalInteractor()
     {
         if (interactor == null)
         {
