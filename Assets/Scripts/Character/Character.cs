@@ -72,7 +72,7 @@ public class Character : MonoBehaviour
 
 
     #region Events
-    public 
+    public event EventHandler OnMoveUpdated;
     #endregion
 
 
@@ -125,6 +125,10 @@ public class Character : MonoBehaviour
     {
         standardMoves.Issue();
         lastUpdated = root.Update(Time.fixedDeltaTime);
+        if(OnMoveUpdated != null)
+        {
+            OnMoveUpdated(lastUpdated, EventArgs.Empty);
+        }
     }
 
     private void OnDisable()
@@ -211,7 +215,7 @@ public class Character : MonoBehaviour
         root.Register(landMove);
     }
 
-    private void OnLanding(object sender, Foot.LandingEventArgs eventArgs)
+    private void OnLanding(object sender, LandingEventArgs eventArgs)
     {
         if (eventArgs.Velocity.y >= landTriggerVelocity)
         {
