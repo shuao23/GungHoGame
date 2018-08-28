@@ -1216,17 +1216,18 @@ MonoBehaviour:
     acceleration: 30
     maxVelocity: 6
   airMotorStats:
-    acceleration: 5
-    maxVelocity: 8
+    acceleration: 10
+    maxVelocity: 14
   rootedMotorStats:
     acceleration: 50
     maxVelocity: 0
   jumpMotorStats:
     velocity: 1000
   jumpReadyTime: 0.17
-  landDuration: 0.35
+  landDuration: 0.3
   landTriggerVelocity: 5
   attackDuration: 1.2
+  rocketAttackDuration: 2.5
 --- !u!114 &114203498300851924
 MonoBehaviour:
   m_ObjectHideFlags: 1
