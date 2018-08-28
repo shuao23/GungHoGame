@@ -68,6 +68,10 @@ public class Character : MonoBehaviour
 
     #region Properties
     public bool Initialized { get; private set; }
+
+    public Rigidbody2D Rigidbody {
+        get { return rigidBody; }
+    }
     #endregion
 
 
