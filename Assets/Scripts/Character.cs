@@ -11,6 +11,8 @@ public class Character : MonoBehaviour
     private Rigidbody2D rigidBody;
     [SerializeField]
     private Foot foot;
+    [SerializeField]
+    private MoveName moveNames = new MoveName();
     [Header("Horizontal Movement")]
     [SerializeField]
     private HorizontalMotorStats groundMotorStats = new HorizontalMotorStats()
@@ -61,6 +63,10 @@ public class Character : MonoBehaviour
 
     #region Properties
     public bool Initialized { get; private set; }
+
+    public MoveName MoveNames {
+        get { return moveNames; }
+    }
     #endregion
 
 
@@ -153,34 +159,34 @@ public class Character : MonoBehaviour
 
         standardMoves = new ParallelMoveGroup();
 
-        HorizontalMove groundMove = new HorizontalMove("ground", standardMotor, groundMotorStats)
+        HorizontalMove groundMove = new HorizontalMove(moveNames.Ground, standardMotor, groundMotorStats)
         {
             OnInRightCondition = IsGrounded,
             OnPostMotorUpdate = ResetMotorDirection
         };
 
-        HorizontalMove airMove = new HorizontalMove("air", standardMotor, airMotorStats)
+        HorizontalMove airMove = new HorizontalMove(moveNames.Air, standardMotor, airMotorStats)
         {
             OnInRightCondition = IsNotGrounded,
             OnPostMotorUpdate = ResetMotorDirection
         };
 
-        HorizontalMove jumpSetupMove = new HorizontalMove("jump", standardMotor, groundMotorStats)
+        HorizontalMove jumpSetupMove = new HorizontalMove(moveNames.Jump, standardMotor, groundMotorStats)
         {
             Duration = jumpReadyTime,
             OnInRightCondition = IsGrounded,
             OnPostMotorUpdate = ResetMotorDirection
         };
 
-        JumpMove jumpUpMove = new JumpMove("jump", jumpMotor, jumpMotorStats)
+        JumpMove jumpUpMove = new JumpMove(moveNames.Jump, jumpMotor, jumpMotorStats)
         {
             Duration = 0,
             OnInRightCondition = IsGrounded
         };
 
-        jumpMove = new SequentialMoveGroup("jump");
+        jumpMove = new SequentialMoveGroup(moveNames.Jump);
 
-        landMove = new HorizontalMove("land", rootedMotor, rootedMotorStats)
+        landMove = new HorizontalMove(moveNames.Land, rootedMotor, rootedMotorStats)
         {
             Duration = landDuration,
             OnInRightCondition = IsGrounded,
@@ -225,4 +231,22 @@ public class Character : MonoBehaviour
         return rigidBody != null;
     }
     #endregion
+
+    [SerializeField]
+    public class MoveName
+    {
+        [SerializeField]
+        private string ground = "ground";
+        [SerializeField]
+        private string air = "air";
+        [SerializeField]
+        private string jump = "jump";
+        [SerializeField]
+        private string land = "land";
+
+        public string Ground { get { return ground; } }
+        public string Air { get { return air; } }
+        public string Jump { get { return jump; } }
+        public string Land { get { return land; } }
+    }
 }
