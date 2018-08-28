@@ -2,7 +2,7 @@
 
 public abstract class Move : IMove
 {
-    private readonly int id;
+    private int id;
     private bool updated;
 
     public bool Issued { get; private set; }
@@ -84,6 +84,11 @@ public abstract class Move : IMove
             NextMove(deltaTime);
             return true;
         }
+    }
+
+    public void SetId(int id)
+    {
+        this.id = id;
     }
 
 
