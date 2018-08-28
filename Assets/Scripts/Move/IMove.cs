@@ -1,8 +1,8 @@
 ﻿public interface IMove
 {
+    string Name { get; }
     bool Issued { get; }
     bool InRightCondition { get; }
-    string Name { get; }
 
     void Issue(bool doOverride = false);
     void Close();

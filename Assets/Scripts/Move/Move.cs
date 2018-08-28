@@ -2,7 +2,7 @@
 
 public abstract class Move : IMove
 {
-    private string name;
+    private readonly string name;
 
     public bool Issued { get; private set; }
 
