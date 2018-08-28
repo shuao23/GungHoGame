@@ -40,16 +40,30 @@ public class MoveManager
     /// Update only the highest prority move
     /// </summary>
     /// <param name="deltaTime">Change in time</param>
-    public void Update(float deltaTime)
+    public IMove Update(float deltaTime)
     {
-        IMove best = BestCandidate;
-        if (lastUpdated != null && best != lastUpdated)
+        IMove updatedMove = null;
+        for (int i = moves.Count - 1; i >= 0; i--)
         {
-            lastUpdated.Close();
+            IMove move = moves[i];
+            if (updatedMove == null)
+            {
+                if (move.Update(deltaTime))
+                {
+                    updatedMove = move;
+                }
+            }
+            else
+            {
+                move.Close();
+            }
         }
 
-        best.Update(deltaTime);
+        if(updatedMove != null)
+        {
+            return updatedMove;
+        }
 
-        lastUpdated = best;
+        throw new NoMoveCandidatesException();
     }
 }

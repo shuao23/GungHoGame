@@ -45,7 +45,6 @@ public class StandardMove<T, S> : Move, ITimedMove
 
     protected override void NextMove(float deltaTime)
     {
-        UnityEngine.Debug.Log(InRightCondition);
         float frameStartTime = TimeSinceStart;
         TimeSinceStart += deltaTime;
 

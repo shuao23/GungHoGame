@@ -51,6 +51,7 @@ public class Character : MonoBehaviour
     private HorizontalMotor rootedMotor;
 
     private MoveManager root;
+    private IMove lastUpdated;
 
     private ParallelMoveGroup standardMoves;
     private SequentialMoveGroup jumpMove;
@@ -59,12 +60,6 @@ public class Character : MonoBehaviour
 
 
     #region Properties
-    public IMove CurrentMove {
-        get {
-            return root.BestCandidate;
-        }
-    }
-
     public bool Initialized { get; private set; }
     #endregion
 
@@ -117,8 +112,7 @@ public class Character : MonoBehaviour
     private void FixedUpdate()
     {
         standardMoves.Issue();
-        root.Update(Time.fixedDeltaTime);
-        //Debug.Log("Current Move: " + CurrentMove.Name);
+        lastUpdated = root.Update(Time.fixedDeltaTime);
     }
 
     private void OnDisable()
@@ -171,6 +165,13 @@ public class Character : MonoBehaviour
             OnPostMotorUpdate = ResetMotorDirection
         };
 
+        HorizontalMove jumpSetupMove = new HorizontalMove("jump", standardMotor, groundMotorStats)
+        {
+            Duration = jumpReadyTime,
+            OnInRightCondition = IsGrounded,
+            OnPostMotorUpdate = ResetMotorDirection
+        };
+
         JumpMove jumpUpMove = new JumpMove("jump", jumpMotor, jumpMotorStats)
         {
             Duration = 0,
@@ -192,7 +193,7 @@ public class Character : MonoBehaviour
         standardMoves.Register(groundMove);
 
         root.Register(jumpMove);
-        jumpMove.Register(groundMove, jumpReadyTime);
+        jumpMove.Register(jumpSetupMove);
         jumpMove.Register(jumpUpMove);
 
         root.Register(landMove);

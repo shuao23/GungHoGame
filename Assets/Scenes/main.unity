@@ -1794,9 +1794,9 @@ MonoBehaviour:
     maxVelocity: 0
   jumpMotorStats:
     velocity: 800
-  jumpReadyTime: 0.18
+  jumpReadyTime: 5
   landDuration: 0.35
-  landTriggerVelocity: 5
+  landTriggerVelocity: 0.18
 --- !u!114 &306058294
 MonoBehaviour:
   m_ObjectHideFlags: 0
