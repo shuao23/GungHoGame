@@ -7,6 +7,10 @@ public class PhysicalInteractor : MonoBehaviour
     [SerializeField]
     private Collider2D feetCollider;
     [SerializeField]
+    private Collider2D rightHandCollider;
+    [SerializeField]
+    private Collider2D leftHandCollider;
+    [SerializeField]
     private LayerMask groundCollision = ~0x0;
 
     private int groundCount = 0;
@@ -45,6 +49,11 @@ public class PhysicalInteractor : MonoBehaviour
                 OnLiftoff(this, EventArgs.Empty);
             }
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Debug.Log(collision.name);
     }
 
 
