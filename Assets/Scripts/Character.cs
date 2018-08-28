@@ -11,17 +11,12 @@ public class Character : MonoBehaviour
     private Rigidbody2D rigidBody;
     [SerializeField]
     private Foot foot;
+    [Header("Horizontal Movement")]
     [SerializeField]
     private HorizontalMotorStats groundMotorStats = new HorizontalMotorStats()
     {
         Acceleration = 30,
         MaxVelocity = 6
-    };
-    [SerializeField]
-    private HorizontalMotorStats rootedMotorStats = new HorizontalMotorStats()
-    {
-        Acceleration = 50,
-        MaxVelocity = 0
     };
     [SerializeField]
     private HorizontalMotorStats airMotorStats = new HorizontalMotorStats()
@@ -30,25 +25,47 @@ public class Character : MonoBehaviour
         MaxVelocity = 8
     };
     [SerializeField]
-    private DelayedJumpMoveStats jumpMoveStats = new DelayedJumpMoveStats() { };
+    private HorizontalMotorStats rootedMotorStats = new HorizontalMotorStats()
+    {
+        Acceleration = 50,
+        MaxVelocity = 0
+    };
+    [Header("Jumping")]
+    [SerializeField]
+    private JumpMotorStats jumpMotorStats = new JumpMotorStats()
+    {
+        Velocity = 800
+    };
+    [SerializeField]
+    [Tooltip("Edit during playtime has no effect")]
+    private float jumpReadyTime = 0.18f;
+    [Header("Landing")]
+    [SerializeField]
+    [Tooltip("Edit during playtime has no effect")]
+    private float landDuration = 0.35f;
+    [SerializeField]
+    private float landTriggerVelocity = 5;
+
+    private HorizontalMotor standardMotor;
+    private JumpMotor jumpMotor;
+    private HorizontalMotor rootedMotor;
+
+    private MoveManager root;
+
+    private ParallelMoveGroup standardMoves;
+    private SequentialMoveGroup jumpMove;
+    private HorizontalMove landMove;
     #endregion
 
 
     #region Properties
-    private MoveManager Root { get; set; }
-
-    private IMove JumpMove { get; set; }
-    private IMove StandardMoves { get; set; }
-
     public IMove CurrentMove {
         get {
-            return Root.BestCandidate;
+            return root.BestCandidate;
         }
     }
 
-
-    public JumpMotor JumpMotor { get; set; }
-    public HorizontalMotor StandardMotor { get; set; }
+    public bool Initialized { get; private set; }
     #endregion
 
 
@@ -60,12 +77,12 @@ public class Character : MonoBehaviour
 
     public void Jump()
     {
-        JumpMove.Issue();
+        jumpMove.Issue();
     }
 
     public void Move(float direction)
     {
-        StandardMotor.Direction = direction;
+        standardMotor.Direction = direction;
     }
     #endregion
 
@@ -89,15 +106,25 @@ public class Character : MonoBehaviour
 
         InitializeMotors();
         InitializeAndRegisterMoves();
+        Initialized = true;
+    }
+
+    private void OnEnable()
+    {
+        foot.OnLanding += OnLanding;
     }
 
     private void FixedUpdate()
     {
-        StandardMoves.Issue();
-        Root.Update(Time.fixedDeltaTime);
-        Debug.Log("Current Move: " + CurrentMove.Name);
+        standardMoves.Issue();
+        root.Update(Time.fixedDeltaTime);
+        //Debug.Log("Current Move: " + CurrentMove.Name);
     }
 
+    private void OnDisable()
+    {
+        foot.OnLanding -= OnLanding;
+    }
 
     private void Reset()
     {
@@ -110,64 +137,73 @@ public class Character : MonoBehaviour
     #region Private Methods
     private void InitializeMotors()
     {
-        StandardMotor = new HorizontalMotor(rigidBody);
-        JumpMotor = new JumpMotor(rigidBody);
+        standardMotor = new HorizontalMotor(rigidBody);
+        jumpMotor = new JumpMotor(rigidBody);
+        rootedMotor = new HorizontalMotor(rigidBody, rootedMotorStats);
     }
 
     private void InitializeAndRegisterMoves()
     {
         //Initialize
-        Action<HorizontalMotor, HorizontalMotorStats> OnHoriMotorSetup = 
-            (HorizontalMotor motor, HorizontalMotorStats stats) =>
-        {
-            motor.Stats = stats;
-        };
-
-        Action<HorizontalMotor, HorizontalMotorStats> OnPostHoriMotorUpdate = 
+        Action<HorizontalMotor, HorizontalMotorStats> ResetMotorDirection =
             (HorizontalMotor motor, HorizontalMotorStats stats) =>
         {
             motor.Direction = 0;
         };
 
-        MoveManager root = new MoveManager();
+        Func<bool> IsGrounded = () => { return foot.IsGrounded; };
+        Func<bool> IsNotGrounded = () => { return !foot.IsGrounded; };
 
-        ParallelMoveGroup standardMoves = new ParallelMoveGroup();
 
-        HorizontalMove groundMove = new HorizontalMove("ground", StandardMotor, groundMotorStats)
+        root = new MoveManager();
+
+        standardMoves = new ParallelMoveGroup();
+
+        HorizontalMove groundMove = new HorizontalMove("ground", standardMotor, groundMotorStats)
         {
-            Continous = true,
-            OnInRightCondition = () => { return foot.IsGrounded; },
-            OnMotorSetup = OnHoriMotorSetup,
-            OnPostMotorUpdate = OnPostHoriMotorUpdate
+            OnInRightCondition = IsGrounded,
+            OnPostMotorUpdate = ResetMotorDirection
         };
 
-        HorizontalMove airMove = new HorizontalMove("air", StandardMotor, airMotorStats)
+        HorizontalMove airMove = new HorizontalMove("air", standardMotor, airMotorStats)
         {
-            Continous = true,
-            OnInRightCondition = () => { return !foot.IsGrounded; },
-            OnMotorSetup = OnHoriMotorSetup,
-            OnPostMotorUpdate = OnPostHoriMotorUpdate
+            OnInRightCondition = IsNotGrounded,
+            OnPostMotorUpdate = ResetMotorDirection
         };
 
-        JumpMove jumpMove = new JumpMove("jump", JumpMotor, jumpMoveStats.JumpMotorStats)
+        JumpMove jumpUpMove = new JumpMove("jump", jumpMotor, jumpMotorStats)
         {
-            OnInRightCondition = () => { return foot.IsGrounded; }
+            Duration = 0,
+            OnInRightCondition = IsGrounded
         };
 
-        SequentialMoveGroup delayedJumpMove = new SequentialMoveGroup("jump");
+        jumpMove = new SequentialMoveGroup("jump");
+
+        landMove = new HorizontalMove("land", rootedMotor, rootedMotorStats)
+        {
+            Duration = landDuration,
+            OnInRightCondition = IsGrounded,
+            OnMotorSetup = null
+        };
 
         //Register
         root.Register(standardMoves);
         standardMoves.Register(airMove);
         standardMoves.Register(groundMove);
 
-        root.Register(delayedJumpMove);
-        delayedJumpMove.Register(jumpMoveStats.GetStandardMoveClip(groundMove));
-        delayedJumpMove.Register(jumpMoveStats.GetJumpMoveClip(jumpMove));
+        root.Register(jumpMove);
+        jumpMove.Register(groundMove, jumpReadyTime);
+        jumpMove.Register(jumpUpMove);
 
-        Root = root;
-        StandardMoves = standardMoves;
-        JumpMove = delayedJumpMove;
+        root.Register(landMove);
+    }
+
+    private void OnLanding(object sender, Foot.LandingEventArgs eventArgs)
+    {
+        if(eventArgs.Velocity.y >= landTriggerVelocity)
+        {
+            landMove.Issue();
+        }
     }
 
     private bool TryFindFoot()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 public class MoveManager
 {
+    private IMove lastUpdated;
     private List<IMove> moves = new List<IMove>();
 
 
@@ -41,6 +42,14 @@ public class MoveManager
     /// <param name="deltaTime">Change in time</param>
     public void Update(float deltaTime)
     {
-        BestCandidate.Update(deltaTime);
+        IMove best = BestCandidate;
+        if (lastUpdated != null && best != lastUpdated)
+        {
+            lastUpdated.Close();
+        }
+
+        best.Update(deltaTime);
+
+        lastUpdated = best;
     }
 }
