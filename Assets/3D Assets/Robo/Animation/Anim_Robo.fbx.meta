@@ -134,65 +134,9 @@ ModelImporter:
     optimizeGameObjects: 0
     motionNodeName: 
     rigImportErrors: 
-    rigImportWarnings: "Copied Avatar Rig Configuration mis-match. Bone length in
-      copied configuration does not match position in animation file:\n\t'Lt_Leg_jnt'
-      : position error = 89.441376 mm\n\t'Rt_Leg_jnt' : position error = 89.441307
-      mm\n"
+    rigImportWarnings: 
     animationImportErrors: 
-    animationImportWarnings: "\nClip 'Walk' has import animation warnings that might
-      lower retargeting quality:\nNote: Activate translation DOF on avatar to improve
-      retargeting quality.\n\t'Waist_jnt' has translation animation that will be discarded.\n\t'Waist_jnt'
-      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\t'Lt_Leg_jnt'
-      has translation animation that will be discarded.\n\t'Rt_Leg_jnt' has translation
-      animation that will be discarded.\n\nClip 'Battle Idle' has import animation
-      warnings that might lower retargeting quality:\nNote: Activate translation DOF
-      on avatar to improve retargeting quality.\n\t'Waist_jnt' has translation animation
-      that will be discarded.\n\nClip 'Rocket Punch' has import animation warnings
-      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
-      to improve retargeting quality.\n\t'Waist_jnt' has translation animation that
-      will be discarded.\n\t'Waist_jnt' is inbetween humanoid transforms and has rotation
-      animation that will be discarded.\n\t'Head_jnt' has translation animation that
-      will be discarded.\n\t'Rt_Shoulder_jnt' has translation animation that will
-      be discarded.\n\t'Lt_Leg_jnt' has translation animation that will be discarded.\n\t'Rt_Leg_jnt'
-      has translation animation that will be discarded.\n\nClip 'Normal Punch' has
-      import animation warnings that might lower retargeting quality:\nNote: Activate
-      translation DOF on avatar to improve retargeting quality.\n\t'Waist_jnt' has
-      translation animation that will be discarded.\n\t'Waist_jnt' is inbetween humanoid
-      transforms and has rotation animation that will be discarded.\n\t'Lt_Leg_jnt'
-      has translation animation that will be discarded.\n\t'Rt_Leg_jnt' has translation
-      animation that will be discarded.\n\nClip 'Mace Attack' has import animation
-      warnings that might lower retargeting quality:\nNote: Activate translation DOF
-      on avatar to improve retargeting quality.\n\t'Waist_jnt' has translation animation
-      that will be discarded.\n\t'Waist_jnt' is inbetween humanoid transforms and
-      has rotation animation that will be discarded.\n\t'Lt_Leg_jnt' has translation
-      animation that will be discarded.\n\t'Rt_Leg_jnt' has translation animation
-      that will be discarded.\n\nClip 'Hit Reaction' has import animation warnings
-      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
-      to improve retargeting quality.\n\t'Waist_jnt' has translation animation that
-      will be discarded.\n\t'Waist_jnt' is inbetween humanoid transforms and has rotation
-      animation that will be discarded.\n\nClip 'Blocking Idle' has import animation
-      warnings that might lower retargeting quality:\nNote: Activate translation DOF
-      on avatar to improve retargeting quality.\n\t'Waist_jnt' has translation animation
-      that will be discarded.\n\nClip 'Jump ' has import animation warnings that might
-      lower retargeting quality:\nNote: Activate translation DOF on avatar to improve
-      retargeting quality.\n\t'Waist_jnt' has translation animation that will be discarded.\n\t'Waist_jnt'
-      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\t'Lt_Leg_jnt'
-      has translation animation that will be discarded.\n\t'Rt_Leg_jnt' has translation
-      animation that will be discarded.\n\nClip 'Deactivate ' has import animation
-      warnings that might lower retargeting quality:\nNote: Activate translation DOF
-      on avatar to improve retargeting quality.\n\t'Waist_jnt' has translation animation
-      that will be discarded.\n\t'Waist_jnt' is inbetween humanoid transforms and
-      has rotation animation that will be discarded.\n\nClip 'Victory' has import
-      animation warnings that might lower retargeting quality:\nNote: Activate translation
-      DOF on avatar to improve retargeting quality.\n\t'Waist_jnt' has translation
-      animation that will be discarded.\n\t'Waist_jnt' is inbetween humanoid transforms
-      and has rotation animation that will be discarded.\n\nClip 'Left Punch' has
-      import animation warnings that might lower retargeting quality:\nNote: Activate
-      translation DOF on avatar to improve retargeting quality.\n\t'Waist_jnt' has
-      translation animation that will be discarded.\n\t'Waist_jnt' is inbetween humanoid
-      transforms and has rotation animation that will be discarded.\n\t'Lt_Leg_jnt'
-      has translation animation that will be discarded.\n\t'Rt_Leg_jnt' has translation
-      animation that will be discarded.\n"
+    animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -227,7 +171,21 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0
+        functionName: OnFootStep
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.50110865
+        functionName: OnFootStep
+        data: robot
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask:
       - path: 
         weight: 1
@@ -1666,143 +1624,7 @@ ModelImporter:
   copyAvatar: 1
   humanDescription:
     serializedVersion: 2
-    human:
-    - boneName: Origin_jnt
-      humanName: Hips
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: Lt_Leg_jnt
-      humanName: LeftUpperLeg
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: Rt_Leg_jnt
-      humanName: RightUpperLeg
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: Lt_Knee_jnt
-      humanName: LeftLowerLeg
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: Rt_Knee_jnt
-      humanName: RightLowerLeg
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: Lt_Ankle_jnt
-      humanName: LeftFoot
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: Rt_Ankle_jnt
-      humanName: RightFoot
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: Body_jnt
-      humanName: Spine
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: Lt_Shoulder_jnt
-      humanName: LeftShoulder
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: Rt_Shoulder_jnt
-      humanName: RightShoulder
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: Lt_Arm_jnt
-      humanName: LeftUpperArm
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: Rt_Arm_jnt
-      humanName: RightUpperArm
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: Lt_Elbow_jnt
-      humanName: LeftLowerArm
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: Rt_Elbow_jnt
-      humanName: RightLowerArm
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: Lt_Wrist_jnt
-      humanName: LeftHand
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: Rt_Wrist_jnt
-      humanName: RightHand
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: Head_jnt
-      humanName: Head
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
+    human: []
     skeleton:
     - name: RoboTest(Clone)
       parentName: 
