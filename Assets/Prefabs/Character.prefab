@@ -269,6 +269,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4944276344952096}
+  - component: {fileID: 81418429419271152}
   - component: {fileID: 50021748049950382}
   - component: {fileID: 114438644882070952}
   - component: {fileID: 114902293707179562}
@@ -998,7 +999,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1487273572393834}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 160.94, y: 0, z: 0}
+  m_LocalPosition: {x: 162.2, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4063045628326138}
@@ -1218,6 +1219,13 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1.34, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!81 &81418429419271152
+AudioListener:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1487273572393834}
+  m_Enabled: 1
 --- !u!82 &82886280556386438
 AudioSource:
   m_ObjectHideFlags: 1
