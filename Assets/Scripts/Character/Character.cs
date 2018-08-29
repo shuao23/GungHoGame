@@ -23,8 +23,6 @@ public class Character : MonoBehaviour
     [SerializeField]
     private AttackVolume rightHand;
     [SerializeField]
-    private AttackVolume leftHand;
-    [SerializeField]
     private DamageVolume damageVolume;
     [Header("Horizontal Movement")]
     [SerializeField]
@@ -135,7 +133,7 @@ public class Character : MonoBehaviour
             return;
         }
 
-        if(leftHand == null || rightHand == null)
+        if(rightHand == null)
         {
             Debug.LogWarning("attack volume not assinged. Disabling");
             enabled = false;
@@ -207,7 +205,7 @@ public class Character : MonoBehaviour
 
         if (move != null)
         {
-            leftHand.IsEnabled = true;
+            rightHand.IsEnabled = true;
         }
     }
 
@@ -217,7 +215,7 @@ public class Character : MonoBehaviour
 
         if (move != null)
         {
-            leftHand.IsEnabled = false;
+            rightHand.IsEnabled = false;
         }
     }
 
