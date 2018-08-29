@@ -43,8 +43,6 @@ public class Rocket : MonoBehaviour
             }
         }
 
-        Debug.Log(other.name);
-
         rocketAudio.Stop();
         rocketAudio.PlayOneShot(rocketSound);
         smokeParticle.Stop();
