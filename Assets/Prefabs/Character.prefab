@@ -269,7 +269,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4944276344952096}
-  - component: {fileID: 81418429419271152}
   - component: {fileID: 50021748049950382}
   - component: {fileID: 114438644882070952}
   - component: {fileID: 114902293707179562}
@@ -426,6 +425,22 @@ GameObject:
   - component: {fileID: 4490553267283074}
   m_Layer: 9
   m_Name: Rt_Foot_jnt
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1823285889201030
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4854948518821996}
+  - component: {fileID: 81651397944243896}
+  m_Layer: 9
+  m_Name: Audio Listner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -934,6 +949,19 @@ Transform:
   m_Father: {fileID: 4984520009953432}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4854948518821996
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1823285889201030}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4944276344952096}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!4 &4869164204464560
 Transform:
   m_ObjectHideFlags: 1
@@ -1006,6 +1034,7 @@ Transform:
   - {fileID: 4605332869219088}
   - {fileID: 4304120911740588}
   - {fileID: 4427874635449466}
+  - {fileID: 4854948518821996}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1219,13 +1248,13 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1.34, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!81 &81418429419271152
+--- !u!81 &81651397944243896
 AudioListener:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1487273572393834}
-  m_Enabled: 1
+  m_GameObject: {fileID: 1823285889201030}
+  m_Enabled: 0
 --- !u!82 &82886280556386438
 AudioSource:
   m_ObjectHideFlags: 1
@@ -1461,7 +1490,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 82886280556386438}
-  footStep: {fileID: 8300000, guid: 5f9318b89335954459ba13223bf648ad, type: 3}
+  footStep: {fileID: 8300000, guid: a3761f11780cdc3449dac5e1801f9ac8, type: 3}
   jump: {fileID: 8300000, guid: 20442042cdc7c0a4e969c6f1c7a75cc8, type: 3}
   land: {fileID: 8300000, guid: d41ec70888071594191ef55b9e66d5ad, type: 3}
   damaged: {fileID: 8300000, guid: 8bdca6f243a52af4492850871c1c7e7e, type: 3}
