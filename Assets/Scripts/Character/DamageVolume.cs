@@ -5,7 +5,11 @@ using UnityEngine;
 public class DamageVolume : MonoBehaviour
 {
     [SerializeField]
-    public bool isEnabled = true;
+    private bool isEnabled = true;
+    [SerializeField]
+    private float restTime = 1f;
+
+    private float timeSinceLastHit;
 
     public event EventHandler<DamageEventArgs> OnDamaged;
 
@@ -16,12 +20,19 @@ public class DamageVolume : MonoBehaviour
 
     public void Damage(int amount)
     {
-        Debug.Log(gameObject.name + " is damaged");
-        if (OnDamaged != null && IsEnabled)
+        if (OnDamaged != null && IsEnabled && timeSinceLastHit >= restTime)
         {
             OnDamaged(this, new DamageEventArgs(amount));
+            timeSinceLastHit = 0;
         }
     }
+
+
+    private void Update()
+    {
+        timeSinceLastHit += Time.deltaTime;
+    }
+
 
     [Serializable]
     public class DamageEventArgs : EventArgs

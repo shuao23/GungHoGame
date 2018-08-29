@@ -40,6 +40,7 @@ GameObject:
   - component: {fileID: 4790036084238622}
   - component: {fileID: 50864181748284710}
   - component: {fileID: 247760325882565450}
+  - component: {fileID: 114556130837570996}
   m_Layer: 10
   m_Name: Sphere Enemy
   m_TagString: Untagged
@@ -338,6 +339,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!114 &114556130837570996
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1138444140986698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 566e75f17d67ce847aff3369e4d03e3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageVolume: {fileID: 114618865666610708}
 --- !u!114 &114618865666610708
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -350,6 +363,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isEnabled: 1
+  restTime: 1
 --- !u!114 &114757906299109054
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -361,7 +375,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c398ad19db652f41997d08f3eb9cbd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 0
+  damage: 1
   isEnabled: 1
 --- !u!135 &135391662844996688
 SphereCollider:
@@ -373,7 +387,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.5
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!247 &247760325882565450
 ConstantForce2D:

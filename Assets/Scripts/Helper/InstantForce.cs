@@ -7,6 +7,8 @@ public class InstantForce : MonoBehaviour {
 
     [SerializeField]
     private Vector3 force;
+    [SerializeField]
+    private float delay;
 
     private new Rigidbody rigidbody;
 
@@ -20,8 +22,37 @@ public class InstantForce : MonoBehaviour {
         }
     }
 
+    public Vector3 Force {
+        get { return force; }
+        set { force = value; }
+    }
+
+    public float Delay {
+        get { return delay; }
+        set { delay = value; }
+    }
+
+
 	void Start () {
-        Rigidbody.AddForce(force, ForceMode.Impulse);
+        if(delay == 0)
+        {
+            AddForce();
+        }
+        else
+        {
+            StartCoroutine(AddForceCoroutine());
+        }
 	}
+
+    private IEnumerator AddForceCoroutine()
+    {
+        yield return new WaitForSeconds(delay);
+        AddForce();
+    }
+
+    private void AddForce()
+    {
+        Rigidbody.AddForce(force, ForceMode.Impulse);
+    }
 
 }

@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Animator))]
 public class CharacterAnimations : MonoBehaviour
 {
     #region Fields
     [SerializeField]
     private Character character;
+    [SerializeField]
+    private RocketSpawner rocketSpawner;
     [SerializeField]
     private Animator animator;
     [SerializeField]
@@ -39,11 +42,9 @@ public class CharacterAnimations : MonoBehaviour
     private void Start()
     {
         fallingFactor.Initialize(character.Rigidbody.velocity.y);
-    }
-
-    private void OnEnable()
-    {
         character.OnMoveUpdated += Character_OnMoveUpdated;
+        character.Health.OnDeath += Health_OnDeath;
+        character.Health.OnDamage += Health_OnDamage;
     }
 
     private void Update()
@@ -52,9 +53,11 @@ public class CharacterAnimations : MonoBehaviour
         UpdateAnimatorParams(Time.deltaTime);
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         character.OnMoveUpdated -= Character_OnMoveUpdated;
+        character.Health.OnDeath -= Health_OnDeath;
+        character.Health.OnDamage -= Health_OnDamage;
     }
 
     private void Reset()
@@ -63,6 +66,7 @@ public class CharacterAnimations : MonoBehaviour
     }
     #endregion
 
+
     #region Event Handlers
     private void Character_OnMoveUpdated(object sender, System.EventArgs e)
     {
@@ -70,10 +74,32 @@ public class CharacterAnimations : MonoBehaviour
         animator.SetInteger(hash.State, move.Id);
     }
 
+    private void Health_OnDeath(object sender, System.EventArgs e)
+    {
+        animator.SetBool(hash.Dead, true);
+    }
+
+    private void Health_OnDamage(object sender, System.EventArgs e)
+    {
+        CharacterHealth health;
+        if ((health = sender as CharacterHealth) != null && !health.IsDead)
+        {
+            animator.SetTrigger(hash.Hit);
+        }
+    }
+
     #endregion
 
 
     #region Private Methods
+    private void OnRocketPunch(string message)
+    {
+        if(message == "Fire")
+        {
+            rocketSpawner.Spawn(facing.IsFacingRight);
+        }
+    }
+
     private void UpdateAnimatorParams(float deltaTime)
     {
         animator.SetFloat(hash.WalkSpeed, Mathf.Abs(character.Rigidbody.velocity.x));
@@ -105,6 +131,8 @@ public class CharacterAnimations : MonoBehaviour
         public const string WALK_SPEED = "walk speed";
         public const string STATE = "state";
         public const string VERTICAL = "normalized vertical";
+        public const string DEAD = "isDead";
+        public const string HIT = "onHit";
     }
 
     private class AnimationHash
@@ -113,12 +141,16 @@ public class CharacterAnimations : MonoBehaviour
         public int WalkSpeed { get; private set; }
         public int State { get; private set; }
         public int Vertical { get; private set; }
+        public int Dead { get; private set; }
+        public int Hit { get; private set; }
 
         public AnimationHash()
         {
             WalkSpeed = Animator.StringToHash(AnimationParameters.WALK_SPEED);
             State = Animator.StringToHash(AnimationParameters.STATE);
             Vertical = Animator.StringToHash(AnimationParameters.VERTICAL);
+            Dead = Animator.StringToHash(AnimationParameters.DEAD);
+            Hit = Animator.StringToHash(AnimationParameters.HIT);
         }
     }
     #endregion

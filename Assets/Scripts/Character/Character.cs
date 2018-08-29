@@ -13,6 +13,7 @@ public class Character : MonoBehaviour
     public const int ID_LAND = 3;
     public const int ID_ATTACK = 4;
     public const int ID_ROCKET_ATTACK = 5;
+    public const int ID_DEAD = 6;
     #endregion
 
     #region Fields
@@ -61,6 +62,9 @@ public class Character : MonoBehaviour
     private float attackDuration = 1.2f;
     [SerializeField]
     private float rocketAttackDuration = 2.5f;
+    [Header("Health")]
+    [SerializeField]
+    private int maxHealth = 3;
 
     private HorizontalMotor standardMotor;
     private JumpMotor jumpMotor;
@@ -74,6 +78,7 @@ public class Character : MonoBehaviour
     private SequentialMoveGroup jumpMove;
     private HorizontalMove landMove;
     private HorizontalMove attackMove;
+    private HorizontalMove deathMove;
 
     private int lastAttack;
     #endregion
@@ -85,6 +90,8 @@ public class Character : MonoBehaviour
     public Rigidbody2D Rigidbody {
         get { return rigidBody; }
     }
+
+    public CharacterHealth Health { get; private set; }
     #endregion
 
 
@@ -149,6 +156,9 @@ public class Character : MonoBehaviour
 
         InitializeMotors();
         InitializeAndRegisterMoves();
+
+        Health = new CharacterHealth(maxHealth);
+
         Initialized = true;
     }
 
@@ -157,11 +167,12 @@ public class Character : MonoBehaviour
         interactor.OnLanding += Interactor_OnLanding;
         attackMove.OnMoveStart += AttackMove_OnMoveStart;
         attackMove.OnMoveEnd += AttackMove_OnMoveEnd;
-        damageVolume.OnDamaged += DamageVolume_OnDamaged; ;
+        damageVolume.OnDamaged += DamageVolume_OnDamaged;
     }
 
     private void FixedUpdate()
     {
+        deathMove.Issue();
         standardMoves.Issue();
         lastUpdated = root.Update(Time.fixedDeltaTime);
         if(OnMoveUpdated != null)
@@ -221,7 +232,8 @@ public class Character : MonoBehaviour
 
     private void DamageVolume_OnDamaged(object sender, DamageVolume.DamageEventArgs e)
     {
-        Debug.Log("damaged");
+        int overDamage;
+        Health.Damage (e.Damage, out overDamage);
     }
 
     private void Interactor_OnLanding(object sender, LandingEventArgs eventArgs)
@@ -310,6 +322,12 @@ public class Character : MonoBehaviour
             OnMotorSetup = null
         };
 
+        deathMove = new HorizontalMove(ID_DEAD, rootedMotor, rootedMotorStats)
+        {
+            OnInRightCondition = () => { return Health.IsDead; },
+            OnMotorSetup = null,
+        };
+
         //Register
         root.Register(standardMoves);
         standardMoves.Register(airMove);
@@ -322,6 +340,8 @@ public class Character : MonoBehaviour
         root.Register(attackMove);
 
         root.Register(landMove);
+
+        root.Register(deathMove);
     }
 
     private bool TryFindPhysicalInteractor()
