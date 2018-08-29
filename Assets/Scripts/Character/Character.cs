@@ -62,6 +62,8 @@ public class Character : MonoBehaviour
     private float attackDuration = 1.2f;
     [SerializeField]
     private float rocketAttackDuration = 2.5f;
+    [SerializeField]
+    private float rocketRechargeLength = 10;
     [Header("Health")]
     [SerializeField]
     private int maxHealth = 3;
@@ -80,7 +82,7 @@ public class Character : MonoBehaviour
     private HorizontalMove attackMove;
     private HorizontalMove deathMove;
 
-    private int lastAttack;
+    private float timeSinceLastCharge;
     #endregion
 
 
@@ -92,6 +94,12 @@ public class Character : MonoBehaviour
     }
 
     public CharacterHealth Health { get; private set; }
+
+    public float RocketRechargePercentage {
+        get {
+            return Mathf.Clamp01((Time.time - timeSinceLastCharge) / rocketRechargeLength);
+        }
+    }
     #endregion
 
 
@@ -108,7 +116,10 @@ public class Character : MonoBehaviour
 
     public void RocketAttack()
     {
-        AttackHelper(ID_ROCKET_ATTACK, rocketAttackDuration);
+        if (RocketRechargePercentage == 1)
+        {
+            AttackHelper(ID_ROCKET_ATTACK, rocketAttackDuration);
+        }
     }
 
     public void Jump()
@@ -154,6 +165,8 @@ public class Character : MonoBehaviour
             return;
         }
 
+        timeSinceLastCharge = float.NegativeInfinity;
+
         InitializeMotors();
         InitializeAndRegisterMoves();
 
@@ -167,6 +180,7 @@ public class Character : MonoBehaviour
         interactor.OnLanding += Interactor_OnLanding;
         attackMove.OnMoveEnd += AttackMove_OnMoveEnd;
         damageVolume.OnDamaged += DamageVolume_OnDamaged;
+
     }
 
     private void FixedUpdate()
@@ -215,6 +229,12 @@ public class Character : MonoBehaviour
         if (move != null)
         {
             rightHand.IsEnabled = false;
+
+            if(move.Id == ID_ROCKET_ATTACK)
+            {
+                Debug.Log("sdfsdf");
+                timeSinceLastCharge = Time.time;
+            }
         }
     }
 
