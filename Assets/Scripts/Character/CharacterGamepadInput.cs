@@ -4,6 +4,8 @@ public class CharacterGamepadInput : MonoBehaviour
 {
     [SerializeField]
     private Character character;
+    [SerializeField]
+    private float minimumX = 0.2f;
 
 
     private void Awake()
@@ -18,18 +20,8 @@ public class CharacterGamepadInput : MonoBehaviour
 
     private void FixedUpdate()
     {
-        float unitDeltaX = 0;
-        if (Input.GetKey(KeyCode.S))
-        {
-            unitDeltaX += 1;
-        }
-
-        if (Input.GetKey(KeyCode.A))
-        {
-            unitDeltaX -= 1;
-        }
-
-        if (unitDeltaX != 0)
+        float unitDeltaX = Input.GetAxis("Horizontal");
+        if (Mathf.Abs(unitDeltaX) >= minimumX)
         {
             character.Move(unitDeltaX);
         }
@@ -37,9 +29,19 @@ public class CharacterGamepadInput : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetButton("Jump"))
         {
             character.Jump();
+        }
+
+        if (Input.GetButton("Fire1"))
+        {
+            character.Attack();
+        }
+
+        if (Input.GetButton("Fire2"))
+        {
+            character.RocketAttack();
         }
     }
 
