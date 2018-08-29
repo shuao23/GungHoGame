@@ -13,7 +13,7 @@ public class Follow : MonoBehaviour
 
     private Vector3 initialPosition;
 
-    void Awake()
+    void OnEnable()
     {
         initialPosition = transform.position;
     }

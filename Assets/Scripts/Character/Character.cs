@@ -165,7 +165,6 @@ public class Character : MonoBehaviour
     private void OnEnable()
     {
         interactor.OnLanding += Interactor_OnLanding;
-        attackMove.OnMoveStart += AttackMove_OnMoveStart;
         attackMove.OnMoveEnd += AttackMove_OnMoveEnd;
         damageVolume.OnDamaged += DamageVolume_OnDamaged;
     }
@@ -184,7 +183,6 @@ public class Character : MonoBehaviour
     private void OnDisable()
     {
         interactor.OnLanding -= Interactor_OnLanding;
-        attackMove.OnMoveStart -= AttackMove_OnMoveStart;
         attackMove.OnMoveEnd -= AttackMove_OnMoveEnd;
         damageVolume.OnDamaged -= DamageVolume_OnDamaged;
     }
@@ -210,16 +208,6 @@ public class Character : MonoBehaviour
 
 
     #region Event Handlers
-    private void AttackMove_OnMoveStart(object sender, EventArgs e)
-    {
-        IMove move = sender as IMove;
-
-        if (move != null)
-        {
-            rightHand.IsEnabled = true;
-        }
-    }
-
     private void AttackMove_OnMoveEnd(object sender, EventArgs e)
     {
         IMove move = sender as IMove;

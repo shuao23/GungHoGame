@@ -11,6 +11,8 @@ public class CharacterAnimations : MonoBehaviour
     [SerializeField]
     private RocketSpawner rocketSpawner;
     [SerializeField]
+    private AttackVolume rightHand;
+    [SerializeField]
     private Animator animator;
     [SerializeField]
     private CharacterFacing facing;
@@ -94,9 +96,22 @@ public class CharacterAnimations : MonoBehaviour
     #region Private Methods
     private void OnRocketPunch(string message)
     {
-        if(message == "Fire")
+        if (message == "Fire")
         {
             rocketSpawner.Spawn(facing.IsFacingRight);
+        }
+    }
+
+    private void OnPunch(int setup)
+    {
+        switch (setup)
+        {
+            case 1:
+                rightHand.IsEnabled = true;
+                break;
+            case 2:
+                rightHand.IsEnabled = false;
+                break;
         }
     }
 

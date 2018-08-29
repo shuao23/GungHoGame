@@ -431,22 +431,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &1823285889201030
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 4854948518821996}
-  - component: {fileID: 81651397944243896}
-  m_Layer: 9
-  m_Name: Audio Listner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &1834257144928346
 GameObject:
   m_ObjectHideFlags: 1
@@ -949,19 +933,6 @@ Transform:
   m_Father: {fileID: 4984520009953432}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4854948518821996
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1823285889201030}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4944276344952096}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!4 &4869164204464560
 Transform:
   m_ObjectHideFlags: 1
@@ -1027,14 +998,13 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1487273572393834}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 162.2, y: 0.02299747, z: 0}
+  m_LocalPosition: {x: 162.2, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4063045628326138}
   - {fileID: 4605332869219088}
   - {fileID: 4304120911740588}
   - {fileID: 4427874635449466}
-  - {fileID: 4854948518821996}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1248,13 +1218,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.77, y: 1.7, z: 0.94}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!81 &81651397944243896
-AudioListener:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1823285889201030}
-  m_Enabled: 0
 --- !u!82 &82886280556386438
 AudioSource:
   m_ObjectHideFlags: 1
@@ -1418,8 +1381,8 @@ MonoBehaviour:
   jumpReadyTime: 0.17
   landDuration: 0.3
   landTriggerVelocity: 5
-  attackDuration: 1.2
-  rocketAttackDuration: 2.5
+  attackDuration: 0.8
+  rocketAttackDuration: 1.8
   maxHealth: 3
 --- !u!114 &114203498300851924
 MonoBehaviour:
@@ -1460,6 +1423,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   character: {fileID: 114001385979552260}
   rocketSpawner: {fileID: 114554428306044504}
+  rightHand: {fileID: 114203498300851924}
   animator: {fileID: 95552929605337216}
   facing:
     speed: 800
@@ -1492,7 +1456,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7a28684cb8de544082e2e62e2be77e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rocketPrefab: {fileID: 0}
+  rocketPrefab: {fileID: 1840207064208846, guid: b552a0f22bdc65447ae705c918119157,
+    type: 2}
 --- !u!114 &114739219512117034
 MonoBehaviour:
   m_ObjectHideFlags: 1

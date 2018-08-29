@@ -38,9 +38,12 @@ public class CharacterSounds : MonoBehaviour {
         audioSource.PlayOneShot(land);
     }
 
-    private void OnPunch()
+    private void OnPunch(int setup)
     {
-        audioSource.PlayOneShot(punch);
+        if (setup == 0)
+        {
+            audioSource.PlayOneShot(punch);
+        }
     }
 
     private void OnRocketPunch(string message)
