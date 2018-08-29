@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class Follow : MonoBehaviour
 {
     [SerializeField]
@@ -42,6 +43,11 @@ public class Follow : MonoBehaviour
 
     private void UpdateInternal()
     {
+        if(target == null)
+        {
+            return;
+        }
+
         Vector3 newPosition = initialPosition;
 
         if (following.x)
